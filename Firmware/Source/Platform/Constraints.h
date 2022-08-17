@@ -11,11 +11,6 @@
 #include "Global.h"
 
 // Definitions
-// Capacitor voltage (in V)
-#define CAP_VOLTAGE_MIN				30
-#define CAP_VOLTAGE_MAX				900
-#define CAP_VOLTAGE_DEF				30
-
 // Gate voltage (in mV)
 #define GATE_VOLTAGE_MIN			0
 #define GATE_VOLTAGE_MAX			5000

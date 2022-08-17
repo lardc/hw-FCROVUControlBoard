@@ -1,14 +1,10 @@
 ﻿#ifndef CONTROLLER_H_
 #define CONTROLLER_H_
 
-
 // Includes
-//
-#include "../stdinc.h"
+#include "stdinc.h"
 
-
-// Constants
-//
+// Types
 typedef enum __DeviceState
 {
 	DS_None			= 0,
@@ -24,18 +20,12 @@ typedef enum __DeviceSubState
 	SDS_RiseEdgeDetected 	= 2
 } DeviceSubState;
 
-
 // Variables
-//
-extern volatile long CONTROL_TimeCounterTemp;
-extern volatile long CONTROL_TimeCounter;
+extern volatile Int64U CONTROL_TimeCounter, AfterPulseTimeout;
 extern volatile DeviceState CONTROL_State;
 extern volatile DeviceSubState CONTROL_SubState;
-extern volatile long AfterPulseTimeout;
-
 
 // Functions
-//
 // Initialize controller
 void CONTROL_Init();
 // Controller routine
@@ -47,4 +37,4 @@ void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 // After pulse process
 void CONTROL_AfterPulseProcess();
 
-#endif /* CONTROLLER_H_ */
+#endif // CONTROLLER_H_

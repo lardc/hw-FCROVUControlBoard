@@ -10,8 +10,6 @@
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
 //
-#define ACT_DIAG_SET_PWM_FB			110	// Set PWM duty on flyback
-#define ACT_DIAG_SET_PWM_BRK		111	// Set PWM duty on Brake
 #define ACT_DIAG_SET_GATE_V			112	// Set gate control voltage
 #define ACT_DIAG_UPDATE_PWM_FREQ	113	// Set alternative PWM frequency
 #define ACT_DIAG_SW_LOW_RATE		114
@@ -27,7 +25,6 @@
 
 // REGISTERS
 //
-#define REG_DESIRED_VOLTAGE			1	// Desired cell voltage
 #define REG_DESIRED_GATE_V			2   // Desired gate voltage
 #define	REG_VOLTAGE_FINE_N_DUMMY	3	// Voltage coefficient N (D = 1024) (not used)
 #define	REG_VRATE_RANGE				4	// Voltage rate selector

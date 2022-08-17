@@ -14,7 +14,7 @@ const TableItemConstraint NVConstraint[DATA_TABLE_NV_SIZE] =
 
 const TableItemConstraint VConstraint[DATA_TABLE_WP_START - DATA_TABLE_WR_START] =
 {
-	{CAP_VOLTAGE_MIN, CAP_VOLTAGE_MAX, CAP_VOLTAGE_DEF},						// 1
+	{0, 0, 0},																	// 1
 	{GATE_VOLTAGE_MIN, GATE_VOLTAGE_MAX, GATE_VOLTAGE_DEF},						// 2
 	{0, 0, 0},																	// 3
 	{RATE_RANGE_MIN, RATE_RANGE_MAX, RATE_RANGE_DEF},							// 4

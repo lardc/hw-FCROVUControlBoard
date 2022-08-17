@@ -1,6 +1,9 @@
 ﻿// Header
 #include "LowLevel.h"
+
+// Include
 #include "Board.h"
+#include "Global.h"
 
 // Forward functions
 //
@@ -56,5 +59,12 @@ void LL_VRateHigh()
 void LL_VRateNone()
 {
 	LL_VRateSelect(false, false, false);
+}
+//-----------------------------
+
+void LL_SetGateVoltage(Int16U Voltage)
+{
+	Int16U DACValue = (Int16U)((float)Voltage / GATE_ANALOG_GAIN / ANALOG_REF_MV * ADC_DAC_RESOLUTION);
+	DAC_SetValueCh1(DAC1, (DACValue > ADC_DAC_RESOLUTION) ? ADC_DAC_RESOLUTION : DACValue);
 }
 //-----------------------------

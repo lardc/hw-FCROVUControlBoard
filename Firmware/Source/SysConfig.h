@@ -1,11 +1,10 @@
 ﻿#ifndef __SYSCONFIG_H
 #define __SYSCONFIG_H
 
-
 // Flash loader options
 #define BOOT_LOADER_VARIABLE			(*((volatile uint32_t *)0x20000000))
 #define BOOT_LOADER_REQUEST				0x12345678
-#define BOOT_LOADER_MAIN_PR_ADDR		0x00000000
+#define BOOT_LOADER_MAIN_PR_ADDR		0x08008000
 //-----------------------------------------------
 
 // System clock
@@ -31,7 +30,5 @@
 #define ADC1_V_BAT_CHANNEL				1				// АЦП1 номер канала напряжения
 #define ADC_DMA_BUFF_SIZE				10				// Количество данных для DMA
 // ----------------------------------------------
-
-
 
 #endif // __SYSCONFIG_H
