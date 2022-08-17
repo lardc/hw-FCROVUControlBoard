@@ -25,21 +25,24 @@
 
 // REGISTERS
 //
-#define REG_DESIRED_GATE_V			2   // Desired gate voltage
-#define	REG_VOLTAGE_FINE_N_DUMMY	3	// Voltage coefficient N (D = 1024) (not used)
-#define	REG_VRATE_RANGE				4	// Voltage rate selector
+#define REG_DESIRED_GATE_V			128	// Desired gate voltage
+#define	REG_VRATE_RANGE				129 // Voltage rate selector
 //
-#define REG_DEV_STATE				10	// Device state
-#define REG_FAULT_REASON			11	// Fault reason in the case DeviceState -> FAULT
-#define REG_DISABLE_REASON			12	// Fault reason in the case DeviceState -> DISABLED
-#define REG_WARNING					13  // Warning if present
+#define REG_DEV_STATE				192	// Device state
+#define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
+#define REG_DISABLE_REASON			194	// Fault reason in the case DeviceState -> DISABLED
+#define REG_WARNING					195	// Warning if present
+#define REG_PROBLEM					196	// Problem reason
+#define REG_OP_RESULT				197	// Indicates that test is done and there is result or fault
 //
-#define REG_VOLTAGE_OK				14	// Charged flag
-#define REG_ACTUAL_VOLTAGE			15	// Actual capacitor level
-//
-#define REG_DIAG_PWM_FB				20	// Flyback PWM duty (diagnostics)
-#define REG_DIAG_PWM_BRK			21	// Brake PWM duty (diagnostics)
-#define REG_DIAG_PWM_FREQ			22	// Update PWM frequency (diagnostics)
+#define REG_ACTUAL_VOLTAGE			200	// Actual capacitor level
+#define REG_VOLTAGE_OK				201	// Charged flag
+// -----------------------------
+#define REG_FWINFO_SLAVE_NID		256	// Device CAN slave node ID
+#define REG_FWINFO_MASTER_NID		257	// Device CAN master node ID (if presented)
+// 258 - 259
+#define REG_FWINFO_STR_LEN			260	// Length of the information string record
+#define REG_FWINFO_STR_BEGIN		261	// Begining of the information string record
 
 // FAULT CODES
 //

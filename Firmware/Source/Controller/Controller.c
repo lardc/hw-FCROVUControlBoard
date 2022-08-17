@@ -8,6 +8,7 @@
 #include "DeviceProfile.h"
 #include "LowLevel.h"
 #include "Board.h"
+#include "BCCIxParams.h"
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
@@ -30,6 +31,7 @@ void CONTROL_Init()
 
 	// Инициализация data table
 	DT_Init(EPROMService, false);
+	DT_SaveFirmwareInfo(CAN_SLAVE_NID, 0);
 	
 	// Сброс значений
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);

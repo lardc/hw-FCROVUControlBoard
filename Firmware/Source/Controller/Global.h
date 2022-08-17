@@ -8,6 +8,7 @@
 #define	SCCI_TIMEOUT_TICKS				1000	// Receive timeout (in ms)
 #define EP_WRITE_COUNT					0		// Количество массивов для записи
 #define EP_COUNT						0		// Количество массивов для чтения
+#define FEP_COUNT						0		// Количество массивов флоат для чтения
 #define ENABLE_LOCKING					FALSE
 #define LED_BLINK_TIME					500		// (in ms)
 #define AFTER_PULSE_TIMEOUT				500		// (in ms)
