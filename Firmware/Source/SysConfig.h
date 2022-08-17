@@ -1,32 +1,37 @@
-#ifndef __SYSCONFIG_H
+п»ї#ifndef __SYSCONFIG_H
 #define __SYSCONFIG_H
 
 
 // Flash loader options
 #define BOOT_LOADER_VARIABLE			(*((volatile uint32_t *)0x20000000))
 #define BOOT_LOADER_REQUEST				0x12345678
-#define BOOT_LOADER_MAIN_PR_ADDR		0x08008000
+#define BOOT_LOADER_MAIN_PR_ADDR		0x00000000
 //-----------------------------------------------
 
 // System clock
-#define SYSCLK							70000000	// Тактовая частота системной шины процессора
-#define QUARTZ_FREQUENCY				20000000	// Частота кварца
+#define SYSCLK							70000000	// РўР°РєС‚РѕРІР°СЏ С‡Р°СЃС‚РѕС‚Р° СЃРёСЃС‚РµРјРЅРѕР№ С€РёРЅС‹ РїСЂРѕС†РµСЃСЃРѕСЂР°
+#define QUARTZ_FREQUENCY				20000000	// Р§Р°СЃС‚РѕС‚Р° РєРІР°СЂС†Р°
 // ----------------------------------------------
 
 // USART
-#define USART_BAUDRATE					115200		// Скорость USART
-#define USART_FIFOlen					32			// Длина FIFO USART
+#define USART_BAUDRATE					78125		// РЎРєРѕСЂРѕСЃС‚СЊ USART
+#define USART_FIFOlen					32			// Р”Р»РёРЅР° FIFO USART
 // ----------------------------------------------
 
 // Timers
-#define TIMER3_uS						1000		// Период работы таймера 3
-#define TIMER4_uS						100			// Период работы таймера 4
-#define TIMER6_uS						10			// Период работы таймера 6
+#define TIMER3_uS						200			// РџРµСЂРёРѕРґ СЂР°Р±РѕС‚С‹ С‚Р°Р№РјРµСЂР° 3
+#define TIMER6_uS						10			// РџРµСЂРёРѕРґ СЂР°Р±РѕС‚С‹ С‚Р°Р№РјРµСЂР° 6
+#define TIMER7_uS						14			// РџРµСЂРёРѕРґ СЂР°Р±РѕС‚С‹ С‚Р°Р№РјРµСЂР° 6
+#define TIMER15_uS						10			// РџРµСЂРёРѕРґ СЂР°Р±РѕС‚С‹ С‚Р°Р№РјРµСЂР° 15
+#define TIMER16_uS						500			// РџРµСЂРёРѕРґ СЂР°Р±РѕС‚С‹ С‚Р°Р№РјРµСЂР° 16
 // ----------------------------------------------
 
-// CAN
-#define CAN_BAUDRATE					1000000		// Битрейт CAN
+// ADC
+#define DMA_ADC_V_BAT_CHANNEL			DMA1_Channel1	// РљР°РЅР°Р» DMA РґР»СЏ РђР¦Рџ РЅР°РїСЂСЏР¶РµРЅРёСЏ Р±Р°С‚Р°СЂРµРё
+#define ADC1_V_BAT_CHANNEL				1				// РђР¦Рџ1 РЅРѕРјРµСЂ РєР°РЅР°Р»Р° РЅР°РїСЂСЏР¶РµРЅРёСЏ
+#define ADC_DMA_BUFF_SIZE				10				// РљРѕР»РёС‡РµСЃС‚РІРѕ РґР°РЅРЅС‹С… РґР»СЏ DMA
 // ----------------------------------------------
+
 
 
 #endif // __SYSCONFIG_H

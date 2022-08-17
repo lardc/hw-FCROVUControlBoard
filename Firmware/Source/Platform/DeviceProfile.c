@@ -154,7 +154,7 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 		case ACT_SAVE_TO_ROM:
 			{
 				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
+					*UserError = 0;
 				else
 					DT_SaveNVPartToEPROM();
 			}
@@ -162,7 +162,7 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 		case ACT_RESTORE_FROM_ROM:
 			{
 				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
+					*UserError = 0;
 				else
 					DT_RestoreNVPartFromEPROM();
 			}
@@ -170,7 +170,7 @@ static Boolean DEVPROFILE_DispatchAction(Int16U ActionID, pInt16U UserError)
 		case ACT_RESET_TO_DEFAULT:
 			{
 				if(ENABLE_LOCKING && !UnlockedForNVWrite)
-					*UserError = ERR_WRONG_PWD;
+					*UserError = 0;
 				else
 					DT_ResetNVPart(&DEVPROFILE_FillNVPartDefault);
 			}

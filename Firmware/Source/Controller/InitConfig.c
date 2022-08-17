@@ -1,144 +1,155 @@
-#include <InitConfig.h>
-
-
-// Forward functions
-//
-void CONTROL_Init();
-
+﻿#include "InitConfig.h"
+#include "Board.h"
+#include "SysConfig.h"
+#include "Controller.h"
+#include "LowLevel.h"
+#include "Global.h"
+#include "DataTable.h"
+#include "DeviceObjectDictionary.h"
+#include "Measurement.h"
 
 // Functions
 //
-Boolean SysClk_Config()
+Boolean INITCFG_ConfigSystemClock()
 {
 	return RCC_PLL_HSE_Config(QUARTZ_FREQUENCY, PREDIV_4, PLL_14);
 }
 //------------------------------------------------------------------------------
 
-void IO_Config()
+void INITCFG_ConfigEI()
 {
-	// Ports enable
+	// Sync
+	EXTI_Config(EXTI_PB, EXTI_0, BOTH_TRIG, 0);
+	EXTI_EnableInterrupt(EXTI0_IRQn, 0, true);
+}
+//------------------------------------------------------------------------------
+
+void INITCFG_ConfigIO()
+{
+	// Включение тактирования портов
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
-
-	// Analog
-	GPIO_Config (GPIOA, Pin_0, Analog, NoPull, HighSpeed, NoPull);				// PA0 - analog input for ADC (battery voltage)
-	GPIO_Config (GPIOA, Pin_4, Analog, NoPull, HighSpeed, NoPull);				// PA1 - DAC out
-
-	// Input
-	GPIO_Config (GPIOA, Pin_5, Input, NoPull, HighSpeed, NoPull);				// PA5 - Sync trigger
-
-	// Outputs
-	GPIO_Config (GPIOA, Pin_1,  Output, PushPull, HighSpeed, NoPull);			// PA1 - OUT_B0_CTRL
-	GPIO_Bit_Rst(GPIOA, Pin_1);
-	GPIO_Config (GPIOA, Pin_2,  Output, PushPull, HighSpeed, NoPull);			// PA2 - OUT_B1_CTRL
-	GPIO_Bit_Rst(GPIOA, Pin_2);
-	GPIO_Config (GPIOA, Pin_3,  Output, PushPull, HighSpeed, NoPull);			// PA3 - Start pulse enable
-	GPIO_Bit_Rst(GPIOA, Pin_3);
-	GPIO_Config (GPIOA, Pin_6,  Output, PushPull, HighSpeed, NoPull);			// PA6 - Start pulse
-	GPIO_Bit_Rst(GPIOA, Pin_6);
-	GPIO_Config (GPIOA, Pin_15,  Output, PushPull, HighSpeed, NoPull);			// PA15 - Fan control
-	GPIO_Bit_Rst(GPIOA, Pin_15);
-	GPIO_Config (GPIOB, Pin_3,  Output, PushPull, HighSpeed, NoPull);			// PB3 - Lamp control
-	GPIO_Bit_Rst(GPIOB, Pin_3);
-	GPIO_Config (GPIOB, Pin_4,  Output, PushPull, HighSpeed, NoPull);			// PB4 - ATUPsBoard control
-	GPIO_Bit_Rst(GPIOB, Pin_4);
-	GPIO_Config (GPIOB, Pin_5,  Output, PushPull, HighSpeed, NoPull);			// PB5 - DRCU SwitchBoard control
-	GPIO_Bit_Set(GPIOB, Pin_5);
-	GPIO_Config (GPIOB, Pin_6,  Output, OpenDrain, HighSpeed, NoPull);			// PB6 - LED2
-	GPIO_Bit_Rst(GPIOB, Pin_6);
-	GPIO_Config (GPIOB, Pin_7,  Output, PushPull, HighSpeed, NoPull);			// PB7 - LED1
-	GPIO_Bit_Rst(GPIOB, Pin_7);
-
-	// Alternative functions
-	GPIO_Config (GPIOA, Pin_11, AltFn, PushPull, HighSpeed, NoPull);			// PA11 (CAN RX)
-	GPIO_AltFn  (GPIOA, Pin_11, AltFn_9);
-	GPIO_Config (GPIOA, Pin_12, AltFn, PushPull, HighSpeed, NoPull);			// PA12 (CAN TX)
-	GPIO_AltFn  (GPIOA, Pin_12, AltFn_9);
-	GPIO_Config (GPIOA, Pin_9, AltFn, PushPull, HighSpeed, NoPull);				// PA9(USART1 TX)
-	GPIO_AltFn  (GPIOA, Pin_9, AltFn_7);
-	GPIO_Config (GPIOA, Pin_10, AltFn, PushPull, HighSpeed, NoPull);			// PA10(USART1 RX)
-	GPIO_AltFn  (GPIOA, Pin_10, AltFn_7);
+	
+	// Аналоговые порты
+	GPIO_InitAnalog(GPIO_MEASURE_V);
+	GPIO_InitAnalog(GPIO_DAC_V);
+	
+	// Цифровые входы
+	GPIO_InitInput(GPIO_SYNC_IN, Pull_Up);
+	
+	// Выходы
+	GPIO_InitPushPullOutput(GPIO_I_LIM);
+	GPIO_InitPushPullOutput(GPIO_LED1);
+	GPIO_InitPushPullOutput(GPIO_LED2);
+	GPIO_InitPushPullOutput(GPIO_LOW_VRATE);
+	GPIO_InitPushPullOutput(GPIO_MID_VRATE);
+	GPIO_InitPushPullOutput(GPIO_HIGH_VRATE);
+	
+	GPIO_SetState(GPIO_I_LIM, true);
+	
+	// Альтернативные функции
+	GPIO_InitAltFunction(GPIO_ALT_UART_RX, AltFn_7);
+	GPIO_InitOpenDrainAltFunction(GPIO_ALT_UART_TX, AltFn_7, NoPull);
+	GPIO_InitAltFunction(GPIO_ALT_PWM_FB, AltFn_9);
+	GPIO_InitAltFunction(GPIO_ALT_PWM_BRAKE, AltFn_1);
 }
 //------------------------------------------------------------------------------
 
-void CAN_Config()
-{
-	RCC_CAN_Clk_EN(CAN_1_ClkEN);
-	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
-	NCAN_FIFOInterrupt(TRUE);
-	NCAN_FilterInit(0, 0, 0);
-}
-//------------------------------------------------------------------------------
-
-void UART_Config()
+void INITCFG_ConfigUART()
 {
 	USART_Init(USART1, SYSCLK, USART_BAUDRATE);
-	USART_Recieve_Interupt(USART1, 0, true);
+	USART_Recieve_Interupt(USART1, 2, true);
 }
 //------------------------------------------------------------------------------
 
-void ADC_Init()
+void INITCFG_ConfigADC()
 {
 	RCC_ADC_Clk_EN(ADC_12_ClkEN);
+	
 	ADC_Calibration(ADC1);
 	ADC_SoftTrigConfig(ADC1);
-	ADC_ChannelSet_SampleTime(ADC1, 1, ADC_SMPL_TIME_7_5);
+	ADC_ChannelSeqReset(ADC1);
+	
+	for(uint8_t i = 1; i <= ADC_DMA_BUFF_SIZE; ++i)
+		ADC_ChannelSet_Sequence(ADC1, ADC1_V_BAT_CHANNEL, i);
+	
+	ADC_ChannelSeqLen(ADC1, ADC_DMA_BUFF_SIZE);
+	ADC_DMAConfig(ADC1);
 	ADC_Enable(ADC1);
 }
 //------------------------------------------------------------------------------
 
-void DAC_Config()
+void INITCFG_ConfigDMA()
 {
-	DACx_Clk_Enable(DAC_1_ClkEN);
-	DACx_Reset();
-	DAC_Trigger_Config(TRIG1_TIMER6, TRIG1_ENABLE);
-	DAC_Buff(BUFF1, false);
-	DACx_Enable(DAC1ENABLE);
-}
-// -----------------------------------------------------------------------------
-
-void Timer6_Config()
-{
-	TIM_Clock_En(TIM_6);
-	TIM_Config(TIM6, SYSCLK, TIMER6_uS);
-	TIM_Start(TIM6);
+	DMA_Clk_Enable(DMA1_ClkEN);
+	
+	// DMA для АЦП напряжения батареи
+	DMA_Reset(DMA_ADC_V_BAT_CHANNEL);
+	DMAChannelX_Config(DMA_ADC_V_BAT_CHANNEL, DMA_MEM2MEM_DIS, DMA_LvlPriority_LOW, DMA_MSIZE_16BIT, DMA_PSIZE_16BIT,
+			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_EN, DMA_READ_FROM_PERIPH);
+	DMAChannelX_DataConfig(DMA_ADC_V_BAT_CHANNEL, (uint32_t)(&MEASURE_ADC_BatteryVoltageRaw[0]), (uint32_t)(&ADC1->DR),
+			ADC_DMA_BUFF_SIZE);
+	DMA_ChannelEnable(DMA_ADC_V_BAT_CHANNEL, true);
 }
 //------------------------------------------------------------------------------
 
-void Timer3_Config()
+void INITCFG_ConfigTimer3()
 {
 	TIM_Clock_En(TIM_3);
 	TIM_Config(TIM3, SYSCLK, TIMER3_uS);
-	TIM_Interupt(TIM3, 1, true);
+	TIM_Interupt(TIM3, 3, true);
 	TIM_Start(TIM3);
 }
 //------------------------------------------------------------------------------
 
-void Timer4_Config()
+void INITCFG_ConfigTimer6()
 {
-	TIM_Clock_En(TIM_4);
-	TIM_Config(TIM4, SYSCLK, TIMER4_uS);
-	TIM_Interupt(TIM4, 0, true);
-	TIM_Start(TIM4);
+	TIM_Clock_En(TIM_6);
+	TIM_Config(TIM6, SYSCLK, TIMER6_uS);
+	TIM_MasterMode(TIM6, MMS_UPDATE);
+	TIM_Start(TIM6);
 }
 //------------------------------------------------------------------------------
 
-void WatchDog_Config()
+void INITCFG_ConfigTimer7()
+{
+	TIM_Clock_En(TIM_7);
+	TIM_Config(TIM7, SYSCLK, TIMER7_uS);
+	TIM_Interupt(TIM7, 1, true);
+}
+//------------------------------------------------------------------------------
+
+void INITCFG_ConfigWatchDog()
 {
 	IWDG_Config();
-	IWDG_ConfigureFastUpdate();
+	IWDG_ConfigureSlowUpdate();
 }
 //------------------------------------------------------------------------------
 
-void EI_Config()
+void INITCFG_ConfigPWM()
 {
-	EXTI_Config(EXTI_PA, EXTI_5, FALL_TRIG, 0);
-	EXTI_EnableInterrupt(EXTI9_5_IRQn, 0, true);
+	//PA2 - Flyback PWM
+	TIM_Clock_En(TIM_15);
+	TIM_Config(TIM15, SYSCLK, TIMER15_uS);
+	TIMx_PWM_ConfigChannel(TIM15, TIMx_CHANNEL1);
+	TIMx_PWM_SetPolarity(TIM15, TIMx_CHANNEL1, false);
+	TIM_Start(TIM15);
+	
+	//PA6 - Brake PWM
+	TIM_Clock_En(TIM_16);
+	TIM_Config(TIM16, SYSCLK, TIMER16_uS);
+	TIMx_PWM_ConfigChannel(TIM16, TIMx_CHANNEL1);
+	TIMx_PWM_SetPolarity(TIM16, TIMx_CHANNEL1, true);
+	TIM_Start(TIM16);
 }
 //------------------------------------------------------------------------------
 
-void InitializeController(Boolean GoodClock)
+void INITCFG_ConfigDAC()
 {
-	CONTROL_Init();
+	DACx_Clk_Enable(DAC_1_ClkEN);
+	DACx_Reset();
+	DAC_TriggerConfigCh1(DAC1, TRIG1_TIMER6, TRIG1_ENABLE);
+	DAC_BufferCh1(DAC1, false);
+	DAC_EnableCh1(DAC1);
 }
 // -----------------------------------------------------------------------------

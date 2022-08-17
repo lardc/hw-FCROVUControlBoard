@@ -1,6 +1,6 @@
-#include "Interrupts.h"
-#include "InitConfig.h"
+п»ї#include "InitConfig.h"
 #include "SysConfig.h"
+#include "Controller.h"
 
 // Functions
 //
@@ -12,39 +12,42 @@ int main()
 	SCB->VTOR = (uint32_t)BOOT_LOADER_MAIN_PR_ADDR;
 	__enable_irq();
 
-	// Настройка системной частоты тактирования
-	SysClk_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° СЃРёСЃС‚РµРјРЅРѕР№ С‡Р°СЃС‚РѕС‚С‹ С‚Р°РєС‚РёСЂРѕРІР°РЅРёСЏ
+	INITCFG_ConfigSystemClock();
 
-	// Настройка портов
-	IO_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° РІРЅРµС€РЅРёС… РїСЂРµСЂС‹РІР°РЅРёР№
+	INITCFG_ConfigEI();
 
-	// Настройка CAN
-	CAN_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° РїРѕСЂС‚РѕРІ
+	INITCFG_ConfigIO();
 
-	// Настройка UART
-	UART_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° UART
+	INITCFG_ConfigUART();
 
-	// Настройка таймеров
-	Timer3_Config();
-	Timer4_Config();
-	Timer6_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° РђР¦Рџ
+	INITCFG_ConfigADC();
 
-	// Настройка ЦАП
-	DAC_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° DMA
+	INITCFG_ConfigDMA();
 
-	// Настройка АЦП
-	ADC_Init();
+	// РќР°СЃС‚СЂРѕР№РєР° С‚Р°Р№РјРµСЂРѕРІ
+	INITCFG_ConfigTimer3();
+	INITCFG_ConfigTimer6();
+	INITCFG_ConfigTimer7();
 
-	// Настройка сторожевого таймера
-	WatchDog_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° СЃС‚РѕСЂРѕР¶РµРІРѕРіРѕ С‚Р°Р№РјРµСЂР°
+	INITCFG_ConfigWatchDog();
 
-	// Настройка внешних прерываний
-	EI_Config();
+	// РќР°СЃС‚СЂРѕР№РєР° С‚Р°Р№РјРµСЂРѕРІ РЁРРњ
+	INITCFG_ConfigPWM();
 
-	// Инициализация логики контроллера
-	InitializeController(false);
+	// РќР°СЃС‚СЂРѕР№РєР° Р¦РђРџ
+	INITCFG_ConfigDAC();
 
-	// Фоновый цикл
+	// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р»РѕРіРёРєРё РєРѕРЅС‚СЂРѕР»Р»РµСЂР°
+	CONTROL_Init();
+
+	// Р¤РѕРЅРѕРІС‹Р№ С†РёРєР»
 	while (TRUE)
 		CONTROL_Idle();
 

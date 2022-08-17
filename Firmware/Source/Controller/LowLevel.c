@@ -1,112 +1,60 @@
-// Header
+﻿// Header
 #include "LowLevel.h"
+#include "Board.h"
 
-// Define
+// Forward functions
 //
-#define CURRENT_RANGE_0		400
-#define CURRENT_RANGE_1		800
-#define CURRENT_RANGE_2		1200
-#define CURRENT_RANGE_3		1600
-//
-
+void LL_VRateSelect(bool LowEnable, bool MidEnable, bool HighEnable);
 
 // Functions
 //
-// LED on board
-bool LL_IsBlinkLED()
+void LL_ToggleLed()
 {
-	return GPIO_Read_Bit(GPIOB, Pin_7);
+	GPIO_Toggle(GPIO_LED2);
 }
 //-----------------------------
 
-void LL_BlinkLED(bool State)
-{
-	State ? GPIO_Bit_Set(GPIOB, Pin_7) : GPIO_Bit_Rst(GPIOB, Pin_7);
-}
-//-----------------------------
-
-// External LED
 void LL_ExternalLED(bool State)
 {
-	State ? GPIO_Bit_Set(GPIOB, Pin_3) : GPIO_Bit_Rst(GPIOB, Pin_3);
+	GPIO_SetState(GPIO_LED1, State);
 }
 //-----------------------------
 
-// Unit cooler
-void LL_ExternalFan(bool State)
+void LL_CurrentLimitEnable(bool State)
 {
-	State ? GPIO_Bit_Set(GPIOA, Pin_15) : GPIO_Bit_Rst(GPIOA, Pin_15);
+	GPIO_SetState(GPIO_I_LIM, State);
 }
 //-----------------------------
 
-// ATUPsBoard control
-void LL_PsBoard(bool State)
+
+void LL_VRateSelect(bool LowEnable, bool MidEnable, bool HighEnable)
 {
-	State ? GPIO_Bit_Set(GPIOB, Pin_4) : GPIO_Bit_Rst(GPIOB, Pin_4);
+	GPIO_SetState(GPIO_LOW_VRATE, !LowEnable);
+	GPIO_SetState(GPIO_MID_VRATE, !MidEnable);
+	GPIO_SetState(GPIO_HIGH_VRATE, !HighEnable);
 }
 //-----------------------------
 
-// DRCU SwitchBoard control
-void LL_SwitchBoard(bool State)
+void LL_VRateLow()
 {
-	State ? GPIO_Bit_Set(GPIOB, Pin_5) : GPIO_Bit_Rst(GPIOB, Pin_5);
+	LL_VRateSelect(true, false, false);
 }
 //-----------------------------
 
-// Software start pulse
-void LL_StartPulse(bool State)
+void LL_VRateMid()
 {
-	State ? GPIO_Bit_Set(GPIOA, Pin_6) : GPIO_Bit_Rst(GPIOA, Pin_6);
+	LL_VRateSelect(false, true, false);
 }
 //-----------------------------
 
-// Start pulse enable
-void LL_StartPulseEn(bool State)
+void LL_VRateHigh()
 {
-	State ? GPIO_Bit_Set(GPIOA, Pin_3) : GPIO_Bit_Rst(GPIOA, Pin_3);
+	LL_VRateSelect(false, false, true);
 }
 //-----------------------------
 
-// Change range of current
-void LL_CurrentRange(Int16U Current)
+void LL_VRateNone()
 {
-	switch(Current)
-	{
-		case CURRENT_RANGE_0:
-			{
-				GPIO_Bit_Rst(GPIOA, Pin_1);
-				GPIO_Bit_Rst(GPIOA, Pin_2);
-			}
-			break;
-
-		case CURRENT_RANGE_1:
-			{
-				GPIO_Bit_Set(GPIOA, Pin_1);
-				GPIO_Bit_Rst(GPIOA, Pin_2);
-			}
-			break;
-
-		case CURRENT_RANGE_2:
-			{
-				GPIO_Bit_Rst(GPIOA, Pin_1);
-				GPIO_Bit_Set(GPIOA, Pin_2);
-			}
-			break;
-
-		case CURRENT_RANGE_3:
-			{
-				GPIO_Bit_Set(GPIOA, Pin_1);
-				GPIO_Bit_Set(GPIOA, Pin_2);
-			}
-			break;
-
-		default:
-			{
-				GPIO_Bit_Rst(GPIOA, Pin_1);
-				GPIO_Bit_Rst(GPIOA, Pin_2);
-			}
-			break;
-	}
+	LL_VRateSelect(false, false, false);
 }
 //-----------------------------
-

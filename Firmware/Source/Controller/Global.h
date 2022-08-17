@@ -1,44 +1,45 @@
-// -----------------------------------------
-// Global definitions
-// ----------------------------------------
-
-#ifndef __GLOBAL_H
+п»ї#ifndef __GLOBAL_H
 #define __GLOBAL_H
-
 
 // Include
 #include "stdinc.h"
-#include "SysConfig.h"
 
+// Global parameters
+#define	SCCI_TIMEOUT_TICKS				1000	// Receive timeout (in ms)
+#define EP_WRITE_COUNT					0		// РљРѕР»РёС‡РµСЃС‚РІРѕ РјР°СЃСЃРёРІРѕРІ РґР»СЏ Р·Р°РїРёСЃРё
+#define EP_COUNT						0		// РљРѕР»РёС‡РµСЃС‚РІРѕ РјР°СЃСЃРёРІРѕРІ РґР»СЏ С‡С‚РµРЅРёСЏ
+#define ENABLE_LOCKING					FALSE
+#define LED_BLINK_TIME					500		// (in ms)
+#define AFTER_PULSE_TIMEOUT				500		// (in ms)
 
-// Definitions
-// 
-// Global miscellaneous parameters
-#define	SCCI_TIMEOUT_TICKS		1000			// in ms
-//
-#define EP_WRITE_COUNT			0				// Количество массивов для записи
-#define EP_COUNT				0				// Количество массивов для чтения
-// Password to unlock non-volatile area for write
-#define ENABLE_LOCKING			FALSE
-// -----------------------------------------------
+// TIM mask
+#define PWM_OUT_LOW_POL					0xFFFD
 
-// Временные параметры
-#define LED_BLINK_TIME			500				// Период моргания светодиода на плате [ms]
-#define	T_CHARGE_DELAY			60000			// Время ожидания заряда [мс]
-#define	T_CHARGE_DELAY_SHORT	15000			// Время ожидания заряда в процессе измерения [мс]
-//
-// Параметры вентилятора
-#define FAN_ACTIVE_TIME			30000			// Время работы вентилятора (мс)
-#define FAN_SLEEP_TIME			180000			// Время повторного запуска вентилятора (мс)
+// ADC & DAC settings
+#define ANALOG_REF_MV					3300	// (in mV)
+#define ADC_DAC_RESOLUTION				4095
 
-// Параметры измерения заряда батареи
-#define V_BAT_THRESHOLD_MIN		(495.0f)		// Нижний порог заряда батареи [В]
-#define V_BAT_THRESHOLD_MAX		(510.0f)		// Верхний порог заряда батареи [В]
+// Fine tuning
+#define CAP_V_CONV						0.332f
 
-// Параметры оцифровки
-#define ADC_RESOLUTION			4095
-#define ADC_REF_MV				3000			// Опорное напряжение АЦП, мВ
-// -----------------------------------------------
+// Regulator parameters
+#define CAP_V_DEADZONE					0.5		// Regulator dead zone (in %)
+#define CAP_V_DEADZONE_MIN_V			3		// Regulator dead zone min (in V)
+#define CAP_V_DEADZONE_MAX_V			10		// Regulator dead zone max (in V)
+#define CAP_V_WINDOW					3		// Acceptance window (in %)
+#define CAP_V_WINDOW_MIN_V				5		// Acceptance window min (in V)
+#define CAP_V_WINDOW_MAX_V				15		// Acceptance window max (in V)
 
+// Duty part
+#define FB_BASE_PWM_HIGH				150		// (in ticks)
+#define FB_BASE_PWM_LOW					20		// (in ticks)
+#define FB_BASE_PWM_IDLE				10		// 50 is about 1us (in ticks)
+#define FB_BASE_PWM_ZONES				5		// Number of PWM zones
+#define FB_BASE_PWM_ZONE_SIZE			((FB_BASE_PWM_HIGH - FB_BASE_PWM_LOW) / (FB_BASE_PWM_ZONES - 1))
+#define BRK_BASE_PWM					20000	// (in ticks)
+#define BRK_TOP_PWM						65534
 
-#endif //  __GLOBAL_H
+// Gate voltage settings
+#define GATE_ANALOG_GAIN				1.42f
+
+#endif // __GLOBAL_H

@@ -1,22 +1,22 @@
-#ifndef __INITCONFIG_H
+﻿#ifndef __INITCONFIG_H
 #define __INITCONFIG_H
 
 #include "Board.h"
 
 //Functions
 //
-Boolean SysClk_Config();
-void EI_Config();
-void IO_Config();
-void CAN_Config();
-void UART_Config();
-void ADC_Init();
-void Timer6_Config();
-void Timer3_Config();
-void WatchDog_Config();
-void InitializeController(Boolean GoodClock);
-void DAC_Config();
-void EI_Config();
-void Timer4_Config();
+
+Boolean INITCFG_ConfigSystemClock();
+void INITCFG_ConfigEI();
+void INITCFG_ConfigIO();
+void INITCFG_ConfigUART();
+void INITCFG_ConfigADC();
+void INITCFG_ConfigDMA();
+void INITCFG_ConfigTimer3();
+void INITCFG_ConfigTimer6();
+void INITCFG_ConfigTimer7();
+void INITCFG_ConfigWatchDog();
+void INITCFG_ConfigPWM();
+void INITCFG_ConfigDAC();
 
 #endif //__INITCONFIG_H

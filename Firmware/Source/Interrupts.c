@@ -1,41 +1,35 @@
-// Include
-#include "Interrupts.h"
-//
-#include <InitConfig.h>
-#include "stm32f30x.h"
+п»ї// Include
 #include "stdinc.h"
-#include "DataTable.h"
 #include "Controller.h"
-#include "DeviceProfile.h"
 #include "LowLevel.h"
 #include "Board.h"
-
-// Variables
-//
-volatile Int64U LED_BlinkTimeCounter = 0;
+#include "Global.h"
+#include "SysConfig.h"
 
 // Functions
 //
-void EXTI9_5_IRQHandler()
+void EXTI0_IRQHandler()
 {
-	CONTROL_InterruptProcess();
-	EXTI_FlagReset(EXTI_5);
-}
-//-----------------------------------------
-
-void TIM4_IRQHandler()
-{
-	if (TIM_StatusCheck(TIM4))
+	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
 	{
-		SoftwareStopPulse();
-		TIM_StatusClear(TIM4);
+		LL_ExternalLED(true);
+		TIM_Start(TIM7);
+
+		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
 	}
+	else
+	{
+		if(GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_RiseEdgeDetected)
+			AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
+	}
+
+	EXTI_FlagReset(EXTI_0);
 }
 //-----------------------------------------
 
 void USART1_IRQHandler()
 {
-	if (ZwSCI_RecieveCheck(USART1))
+	if(ZwSCI_RecieveCheck(USART1))
 	{
 		ZwSCI_RegisterToFIFO(USART1);
 		ZwSCI_RecieveFlagClear(USART1);
@@ -43,33 +37,38 @@ void USART1_IRQHandler()
 }
 //-----------------------------------------
 
-void USB_LP_CAN_RX0_IRQHandler()
+void TIM3_IRQHandler()
 {
-	if (NCAN_RecieveCheck())
+	static uint16_t CounterTmp = 0, CounterLed = 0;
+
+	if(TIM_StatusCheck(TIM3))
 	{
-		NCAN_RecieveData();
-		NCAN_RecieveFlagReset();
+		if(++CounterTmp >= (1000 / TIMER3_uS))
+		{
+			CounterTmp = 0;
+			CONTROL_TimeCounter++;
+			
+			if(++CounterLed >= LED_BLINK_TIME)
+			{
+				LL_ToggleLed();
+				CounterLed = 0;
+			}
+		}
+		
+		ADC_SamplingStart(ADC1);
+		CONTROL_Cycle();
+		CONTROL_AfterPulseProcess();
+		TIM_StatusClear(TIM3);
 	}
 }
 //-----------------------------------------
 
-void TIM3_IRQHandler()
+void TIM7_IRQHandler()
 {
-	if (TIM_StatusCheck(TIM3))
-	{
-		CONTROL_TimeCounter++;
-
-		if (CONTROL_TimeCounter > (LED_BlinkTimeCounter + LED_BLINK_TIME))
-		{
-			//Моргаем светодиодом
-			if (!LL_IsBlinkLED())
-				LL_BlinkLED(TRUE);
-			else
-				LL_BlinkLED(FALSE);
-
-			LED_BlinkTimeCounter = CONTROL_TimeCounter;
-		}
-		TIM_StatusClear(TIM3);
-	}
+	if(TIM_StatusCheck(TIM7))
+		LL_CurrentLimitEnable(true);
+	
+	TIM_Stop(TIM7);
+	TIM_StatusClear(TIM7);
 }
 //-----------------------------------------
