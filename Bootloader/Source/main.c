@@ -56,21 +56,27 @@ void IO_Config()
 	RCC_GPIO_Clk_EN(PORTA);
 	RCC_GPIO_Clk_EN(PORTB);
 
+	// Аналоговые порты
+	GPIO_InitAnalog(GPIO_MEASURE_V);
+	GPIO_InitAnalog(GPIO_DAC_V);
+
 	// Выходы
-	GPIO_Config(GPIOB, Pin_7, Output, PushPull, HighSpeed, NoPull);	// PB7(LED)
+	GPIO_InitPushPullOutput(GPIO_OUT_B0);
+	GPIO_InitPushPullOutput(GPIO_OUT_B1);
+	GPIO_InitPushPullOutput(GPIO_PULSE_EN);
+	GPIO_InitPushPullOutput(GPIO_START_PULSE);
+	GPIO_InitPushPullOutput(GPIO_FAN);
+	GPIO_InitPushPullOutput(GPIO_LAMP);
+	GPIO_InitPushPullOutput(GPIO_PS_BOARD);
+	GPIO_InitPushPullOutput(GPIO_SW_BOARD);
+	GPIO_InitPushPullOutput(GPIO_LED1);
+	GPIO_InitPushPullOutput(GPIO_LED2);
 
 	// Альтернативные функции портов
-	GPIO_Config(GPIOA, Pin_9, AltFn, PushPull, HighSpeed, NoPull);		// PA9(USART1 TX)
-	GPIO_AltFn(GPIOA, Pin_9, AltFn_7);
-
-	GPIO_Config(GPIOA, Pin_10, AltFn, PushPull, HighSpeed, NoPull);		// PA10(USART1 RX)
-	GPIO_AltFn(GPIOA, Pin_10, AltFn_7);
-
-	GPIO_Config(GPIOA, Pin_11, AltFn, PushPull, HighSpeed, NoPull);		// PA11(CAN RX)
-	GPIO_AltFn(GPIOA, Pin_11, AltFn_9);
-
-	GPIO_Config(GPIOA, Pin_12, AltFn, PushPull, HighSpeed, NoPull);		// PA12(CAN TX)
-	GPIO_AltFn(GPIOA, Pin_12, AltFn_9);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_CAN1_RX, AltFn_9);
+	GPIO_InitAltFunction(GPIO_ALT_CAN1_TX, AltFn_9);
 }
 //--------------------------------------------
 
