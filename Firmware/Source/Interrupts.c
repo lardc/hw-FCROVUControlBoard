@@ -12,7 +12,7 @@ void EXTI0_IRQHandler()
 {
 	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
 	{
-		LL_ExternalLED(true);
+		LL_PanelLamp(true);
 		TIM_Start(TIM7);
 
 		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
@@ -55,8 +55,6 @@ void TIM3_IRQHandler()
 			}
 		}
 		
-		ADC_SamplingStart(ADC1);
-		CONTROL_Cycle();
 		CONTROL_AfterPulseProcess();
 		TIM_StatusClear(TIM3);
 	}
@@ -66,9 +64,9 @@ void TIM3_IRQHandler()
 void TIM7_IRQHandler()
 {
 	if(TIM_StatusCheck(TIM7))
-		LL_CurrentLimitEnable(true);
-	
-	TIM_Stop(TIM7);
-	TIM_StatusClear(TIM7);
+	{
+		TIM_Stop(TIM7);
+		TIM_StatusClear(TIM7);
+	}
 }
 //-----------------------------------------

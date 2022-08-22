@@ -12,10 +12,9 @@
 //
 #define ACT_DIAG_SET_GATE_V			112	// Set gate control voltage
 #define ACT_DIAG_UPDATE_PWM_FREQ	113	// Set alternative PWM frequency
-#define ACT_DIAG_SW_LOW_RATE		114
-#define ACT_DIAG_SW_MID_RATE		115
-#define ACT_DIAG_SW_HIGH_RATE		116
-#define ACT_DIAG_SW_OFF_RATE		117
+#define ACT_DIAG_SW_LOW_CURRENT		114
+#define ACT_DIAG_SW_MID_CURRENT		115
+#define ACT_DIAG_SW_HIGH_CURRENT	116
 
 #define ACT_SAVE_TO_ROM				200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM		201	// Восстановление данных из FLASH

@@ -38,20 +38,22 @@ void INITCFG_ConfigIO()
 	GPIO_InitInput(GPIO_SYNC_IN, Pull_Up);
 	
 	// Выходы
-	GPIO_InitPushPullOutput(GPIO_I_LIM);
+	GPIO_InitPushPullOutput(GPIO_OUT_B0);
+	GPIO_InitPushPullOutput(GPIO_OUT_B1);
+	GPIO_InitPushPullOutput(GPIO_PULSE_EN);
+	GPIO_InitPushPullOutput(GPIO_START_PULSE);
+	GPIO_InitPushPullOutput(GPIO_FAN);
+	GPIO_InitPushPullOutput(GPIO_LAMP);
+	GPIO_InitPushPullOutput(GPIO_PS_BOARD);
+	GPIO_InitPushPullOutput(GPIO_SW_BOARD);
 	GPIO_InitPushPullOutput(GPIO_LED1);
 	GPIO_InitPushPullOutput(GPIO_LED2);
-	GPIO_InitPushPullOutput(GPIO_LOW_VRATE);
-	GPIO_InitPushPullOutput(GPIO_MID_VRATE);
-	GPIO_InitPushPullOutput(GPIO_HIGH_VRATE);
-	
-	GPIO_SetState(GPIO_I_LIM, true);
 	
 	// Альтернативные функции
-	GPIO_InitAltFunction(GPIO_ALT_UART_RX, AltFn_7);
-	GPIO_InitOpenDrainAltFunction(GPIO_ALT_UART_TX, AltFn_7, NoPull);
-	GPIO_InitAltFunction(GPIO_ALT_PWM_FB, AltFn_9);
-	GPIO_InitAltFunction(GPIO_ALT_PWM_BRAKE, AltFn_1);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
+	GPIO_InitAltFunction(GPIO_ALT_CAN1_RX, AltFn_9);
+	GPIO_InitAltFunction(GPIO_ALT_CAN1_TX, AltFn_9);
 }
 //------------------------------------------------------------------------------
 
@@ -123,24 +125,6 @@ void INITCFG_ConfigWatchDog()
 {
 	IWDG_Config();
 	IWDG_ConfigureSlowUpdate();
-}
-//------------------------------------------------------------------------------
-
-void INITCFG_ConfigPWM()
-{
-	//PA2 - Flyback PWM
-	TIM_Clock_En(TIM_15);
-	TIM_Config(TIM15, SYSCLK, TIMER15_uS);
-	TIMx_PWM_ConfigChannel(TIM15, TIMx_CHANNEL1);
-	TIMx_PWM_SetPolarity(TIM15, TIMx_CHANNEL1, false);
-	TIM_Start(TIM15);
-	
-	//PA6 - Brake PWM
-	TIM_Clock_En(TIM_16);
-	TIM_Config(TIM16, SYSCLK, TIMER16_uS);
-	TIMx_PWM_ConfigChannel(TIM16, TIMx_CHANNEL1);
-	TIMx_PWM_SetPolarity(TIM16, TIMx_CHANNEL1, true);
-	TIM_Start(TIM16);
 }
 //------------------------------------------------------------------------------
 

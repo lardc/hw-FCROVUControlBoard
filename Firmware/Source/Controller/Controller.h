@@ -28,8 +28,6 @@ extern volatile DeviceSubState CONTROL_SubState;
 // Functions
 // Initialize controller
 void CONTROL_Init();
-// Controller routine
-void CONTROL_Cycle();
 // Update low-priority states
 void CONTROL_Idle();
 // Set device state

@@ -46,11 +46,6 @@ void CONTROL_Idle()
 }
 //-----------------------------
 
-void CONTROL_Cycle()
-{
-}
-//-----------------------------
-
 void CONTROL_PrepareGateOutput()
 {
 	LL_SetGateVoltage(DataTable[REG_DESIRED_GATE_V]);
@@ -60,8 +55,6 @@ void CONTROL_PrepareGateOutput()
 void CONTROL_ApplyParameters()
 {
 	CONTROL_PrepareGateOutput();
-	LL_CurrentLimitEnable(false);
-
 	CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
 }
 //-----------------------------
@@ -103,20 +96,16 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			CONTROL_PrepareGateOutput();
 			break;
 			
-		case ACT_DIAG_SW_LOW_RATE:
-			LL_VRateLow();
+		case ACT_DIAG_SW_LOW_CURRENT:
+			LL_OutCurrentLow();
 			break;
 			
-		case ACT_DIAG_SW_MID_RATE:
-			LL_VRateMid();
+		case ACT_DIAG_SW_MID_CURRENT:
+			LL_OutCurrentMid();
 			break;
 			
-		case ACT_DIAG_SW_HIGH_RATE:
-			LL_VRateHigh();
-			break;
-			
-		case ACT_DIAG_SW_OFF_RATE:
-			LL_VRateNone();
+		case ACT_DIAG_SW_HIGH_CURRENT:
+			LL_OutCurrentHigh();
 			break;
 			
 		case ACT_CLR_FAULT:
@@ -146,9 +135,7 @@ void CONTROL_AfterPulseProcess()
 	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
 	{
 		AfterPulseTimeout = 0;
-
-		LL_ExternalLED(false);
-		LL_CurrentLimitEnable(false);
+		LL_PanelLamp(false);
 		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
 	}
 }

@@ -17,48 +17,66 @@ void LL_ToggleLed()
 }
 //-----------------------------
 
-void LL_ExternalLED(bool State)
+void LL_Led2(bool State)
 {
-	GPIO_SetState(GPIO_LED1, State);
+	GPIO_SetState(GPIO_LED2, State);
 }
 //-----------------------------
 
-void LL_CurrentLimitEnable(bool State)
+void LL_PanelLamp(bool State)
 {
-	GPIO_SetState(GPIO_I_LIM, State);
+	GPIO_SetState(GPIO_LAMP, State);
 }
 //-----------------------------
 
-
-void LL_VRateSelect(bool LowEnable, bool MidEnable, bool HighEnable)
+void LL_OutCurrentLow()
 {
-	GPIO_SetState(GPIO_LOW_VRATE, !LowEnable);
-	GPIO_SetState(GPIO_MID_VRATE, !MidEnable);
-	GPIO_SetState(GPIO_HIGH_VRATE, !HighEnable);
+	GPIO_SetState(GPIO_OUT_B0, false);
+	GPIO_SetState(GPIO_OUT_B1, false);
 }
 //-----------------------------
 
-void LL_VRateLow()
+void LL_OutCurrentMid()
 {
-	LL_VRateSelect(true, false, false);
+	GPIO_SetState(GPIO_OUT_B0, true);
+	GPIO_SetState(GPIO_OUT_B1, false);
 }
 //-----------------------------
 
-void LL_VRateMid()
+void LL_OutCurrentHigh()
 {
-	LL_VRateSelect(false, true, false);
+	GPIO_SetState(GPIO_OUT_B0, true);
+	GPIO_SetState(GPIO_OUT_B1, true);
 }
 //-----------------------------
 
-void LL_VRateHigh()
+void LL_PulseEnable(bool State)
 {
-	LL_VRateSelect(false, false, true);
+	GPIO_SetState(GPIO_PULSE_EN, State);
 }
 //-----------------------------
 
-void LL_VRateNone()
+void LL_PulseStart(bool State)
 {
-	LL_VRateSelect(false, false, false);
+	GPIO_SetState(GPIO_START_PULSE, State);
+}
+//-----------------------------
+
+void LL_Fan(bool State)
+{
+	GPIO_SetState(GPIO_FAN, State);
+}
+//-----------------------------
+
+void LL_PSBoard(bool State)
+{
+	GPIO_SetState(GPIO_PS_BOARD, State);
+}
+//-----------------------------
+
+void LL_SWBoard(bool State)
+{
+	GPIO_SetState(GPIO_SW_BOARD, State);
 }
 //-----------------------------
 

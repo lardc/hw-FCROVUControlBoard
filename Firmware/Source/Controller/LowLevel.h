@@ -7,12 +7,16 @@
 // Functions
 //
 void LL_ToggleLed();
-void LL_ExternalLED(bool State);
-void LL_CurrentLimitEnable(bool State);
-void LL_VRateLow();
-void LL_VRateMid();
-void LL_VRateHigh();
-void LL_VRateNone();
+void LL_Led2(bool State);
+void LL_PanelLamp(bool State);
+void LL_OutCurrentLow();
+void LL_OutCurrentMid();
+void LL_OutCurrentHigh();
+void LL_PulseEnable(bool State);
+void LL_PulseStart(bool State);
+void LL_Fan(bool State);
+void LL_PSBoard(bool State);
+void LL_SWBoard(bool State);
 void LL_SetGateVoltage(Int16U Voltage);
 
 #endif //__LOWLEVEL_H

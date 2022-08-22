@@ -21,18 +21,23 @@ GPIO_PortPinSettingMacro GPIO_MEASURE_V 	= {GPIOA, Pin_0};	// Напряжени
 GPIO_PortPinSettingMacro GPIO_DAC_V 		= {GPIOA, Pin_4};	// ЦАП - задание
 
 // Определения для входных/выходных портов
-GPIO_PortPinSettingMacro GPIO_SYNC_IN	  	= {GPIOB, Pin_0};
-GPIO_PortPinSettingMacro GPIO_I_LIM			= {GPIOA, Pin_5};
-GPIO_PortPinSettingMacro GPIO_LED1	 	 	= {GPIOA, Pin_15};
-GPIO_PortPinSettingMacro GPIO_LED2	 	 	= {GPIOB, Pin_4};
-GPIO_PortPinSettingMacro GPIO_LOW_VRATE		= {GPIOB, Pin_15};
-GPIO_PortPinSettingMacro GPIO_MID_VRATE	 	= {GPIOA, Pin_9};
-GPIO_PortPinSettingMacro GPIO_HIGH_VRATE	= {GPIOA, Pin_11};
+GPIO_PortPinSettingMacro GPIO_SYNC_IN 	 	= {GPIOA, Pin_5};
+
+GPIO_PortPinSettingMacro GPIO_OUT_B0 	 	= {GPIOA, Pin_1};
+GPIO_PortPinSettingMacro GPIO_OUT_B1 	 	= {GPIOA, Pin_2};
+GPIO_PortPinSettingMacro GPIO_PULSE_EN 	 	= {GPIOA, Pin_3};
+GPIO_PortPinSettingMacro GPIO_START_PULSE 	= {GPIOA, Pin_6};
+GPIO_PortPinSettingMacro GPIO_FAN		 	= {GPIOA, Pin_15};
+GPIO_PortPinSettingMacro GPIO_LAMP	 	 	= {GPIOB, Pin_3};
+GPIO_PortPinSettingMacro GPIO_PS_BOARD 	 	= {GPIOB, Pin_4};
+GPIO_PortPinSettingMacro GPIO_SW_BOARD 	 	= {GPIOB, Pin_5};
+GPIO_PortPinSettingMacro GPIO_LED1	 	 	= {GPIOB, Pin_7};
+GPIO_PortPinSettingMacro GPIO_LED2	 	 	= {GPIOB, Pin_6};
 
 // Определения для портов альтернативных функций
-GPIO_PortPinSettingMacro GPIO_ALT_UART_RX 	= {GPIOB, Pin_7};
-GPIO_PortPinSettingMacro GPIO_ALT_UART_TX	= {GPIOB, Pin_6};
-GPIO_PortPinSettingMacro GPIO_ALT_PWM_FB  	= {GPIOA, Pin_2};
-GPIO_PortPinSettingMacro GPIO_ALT_PWM_BRAKE	= {GPIOA, Pin_6};
+GPIO_PortPinSettingMacro GPIO_ALT_UART1_TX	= {GPIOA, Pin_9};
+GPIO_PortPinSettingMacro GPIO_ALT_UART1_RX	= {GPIOA, Pin_10};
+GPIO_PortPinSettingMacro GPIO_ALT_CAN1_TX	= {GPIOA, Pin_12};
+GPIO_PortPinSettingMacro GPIO_ALT_CAN1_RX	= {GPIOA, Pin_11};
 
 #endif // __BOARD_H

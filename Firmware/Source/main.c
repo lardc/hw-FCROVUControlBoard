@@ -38,9 +38,6 @@ int main()
 	// Настройка сторожевого таймера
 	INITCFG_ConfigWatchDog();
 
-	// Настройка таймеров ШИМ
-	INITCFG_ConfigPWM();
-
 	// Настройка ЦАП
 	INITCFG_ConfigDAC();
 
