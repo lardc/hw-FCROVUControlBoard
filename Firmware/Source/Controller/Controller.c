@@ -91,6 +91,20 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 		case ACT_DISABLE_POWER:
 			CONTROL_SetDeviceState(DS_None, SDS_None);
 			break;
+
+		case ACT_CLR_FAULT:
+			if(CONTROL_State == DS_Fault)
+				CONTROL_SetDeviceState(DS_None, SDS_None);
+			DataTable[REG_FAULT_REASON] = FAULT_NONE;
+			break;
+
+		case ACT_CLR_WARNING:
+			DataTable[REG_WARNING] = WARNING_NONE;
+			break;
+
+		case ACT_APPLY_PARAMS:
+			CONTROL_ApplyParameters();
+			break;
 			
 		case ACT_DIAG_SET_GATE_V:
 			CONTROL_PrepareGateOutput();
@@ -108,20 +122,32 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			LL_OutCurrentHigh();
 			break;
 			
-		case ACT_CLR_FAULT:
-			if(CONTROL_State == DS_Fault)
-				CONTROL_SetDeviceState(DS_None, SDS_None);
-			DataTable[REG_FAULT_REASON] = FAULT_NONE;
+		case ACT_DIAG_SW_LAMP:
+			LL_PanelLamp(DataTable[REG_DEBUG]);
+			break;
+
+		case ACT_DIAG_SW_FAN:
+			LL_Fan(DataTable[REG_DEBUG]);
 			break;
 			
-		case ACT_CLR_WARNING:
-			DataTable[REG_WARNING] = WARNING_NONE;
+		case ACT_DIAG_SW_DRCUSWBOARD:
+			LL_SWBoard(DataTable[REG_DEBUG]);
 			break;
-			
-		case ACT_APPLY_PARAMS:
-			CONTROL_ApplyParameters();
+
+		case ACT_DIAG_SW_ATUPSBOARD:
+			LL_PSBoard(DataTable[REG_DEBUG]);
 			break;
-			
+
+		case ACT_DIAG_ENABLE_PULSE:
+			LL_PulseEnable(DataTable[REG_DEBUG]);
+			break;
+
+		case ACT_DIAG_MANUAL_PULSE:
+			LL_PulseStart(true);
+			DELAY_US(100);
+			LL_PulseStart(false);
+			break;
+
 		default:
 			return false;
 	}

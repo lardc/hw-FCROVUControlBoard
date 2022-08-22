@@ -10,11 +10,16 @@
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
 //
-#define ACT_DIAG_SET_GATE_V			112	// Set gate control voltage
-#define ACT_DIAG_UPDATE_PWM_FREQ	113	// Set alternative PWM frequency
-#define ACT_DIAG_SW_LOW_CURRENT		114
-#define ACT_DIAG_SW_MID_CURRENT		115
-#define ACT_DIAG_SW_HIGH_CURRENT	116
+#define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
+#define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока
+#define ACT_DIAG_SW_MID_CURRENT		122	// Выбрать средний диапазон тока
+#define ACT_DIAG_SW_HIGH_CURRENT	123	// Выбрать верхний диапазон тока
+#define ACT_DIAG_SW_LAMP			124	// Управление лампой на передней панели
+#define ACT_DIAG_SW_FAN				125	// Управление вентилятором
+#define ACT_DIAG_SW_DRCUSWBOARD		126	// Управление ЭМ DRCUSwitchBoard
+#define ACT_DIAG_SW_ATUPSBOARD		127	// Управление ЭМ ATUPSBoard
+#define ACT_DIAG_ENABLE_PULSE		128	// Разрешение входа запуска импульса
+#define ACT_DIAG_MANUAL_PULSE		129	// Ручной запуск импульса
 
 #define ACT_SAVE_TO_ROM				200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM		201	// Восстановление данных из FLASH
@@ -26,6 +31,8 @@
 //
 #define REG_DESIRED_GATE_V			128	// Desired gate voltage
 #define	REG_VRATE_RANGE				129 // Voltage rate selector
+//
+#define REG_DEBUG					150	// Отладочный регистр
 //
 #define REG_DEV_STATE				192	// Device state
 #define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
