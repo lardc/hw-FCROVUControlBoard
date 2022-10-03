@@ -37,6 +37,16 @@ void USART1_IRQHandler()
 }
 //-----------------------------------------
 
+void USB_LP_CAN_RX0_IRQHandler()
+{
+	if (NCAN_RecieveCheck())
+	{
+		NCAN_RecieveData();
+		NCAN_RecieveFlagReset();
+	}
+}
+//-----------------------------------------
+
 void TIM3_IRQHandler()
 {
 	static uint16_t CounterTmp = 0, CounterLed = 0;

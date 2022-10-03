@@ -64,6 +64,15 @@ void INITCFG_ConfigUART()
 }
 //------------------------------------------------------------------------------
 
+void INITCFG_ConfigCAN()
+{
+	RCC_CAN_Clk_EN(CAN_1_ClkEN);
+	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
+	NCAN_FIFOInterrupt(TRUE);
+	NCAN_FilterInit(0, 0, 0);
+}
+//------------------------------------------------------------------------------
+
 void INITCFG_ConfigADC()
 {
 	RCC_ADC_Clk_EN(ADC_12_ClkEN);

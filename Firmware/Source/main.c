@@ -24,6 +24,9 @@ int main()
 	// Настройка UART
 	INITCFG_ConfigUART();
 
+	// Настройка CAN
+	INITCFG_ConfigCAN();
+
 	// Настройка АЦП
 	INITCFG_ConfigADC();
 
