@@ -13,7 +13,7 @@ void LL_VRateSelect(bool LowEnable, bool MidEnable, bool HighEnable);
 //
 void LL_ToggleLed()
 {
-	GPIO_Toggle(GPIO_LED2);
+	GPIO_Toggle(GPIO_LED1);
 }
 //-----------------------------
 
