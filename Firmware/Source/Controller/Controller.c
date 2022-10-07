@@ -127,23 +127,43 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 			
 		case ACT_DIAG_SW_LAMP:
-			LL_PanelLamp(DataTable[REG_DEBUG]);
+			{
+				LL_PanelLamp(TRUE);
+				DELAY_US(1000000);
+				LL_PanelLamp(FALSE);
+			}
 			break;
 
 		case ACT_DIAG_SW_FAN:
-			LL_Fan(DataTable[REG_DEBUG]);
+			{
+				LL_Fan(TRUE);
+				DELAY_US(1000000);
+				LL_Fan(FALSE);
+			}
 			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
-			LL_SWBoard(DataTable[REG_DEBUG]);
+			{
+				LL_SWBoard(TRUE);
+				DELAY_US(1000000);
+				LL_SWBoard(FALSE);
+			}
 			break;
 
 		case ACT_DIAG_SW_ATUPSBOARD:
-			LL_PSBoard(DataTable[REG_DEBUG]);
+			{
+				LL_PSBoard(TRUE);
+				DELAY_US(1000000);
+				LL_PSBoard(FALSE);
+			}
 			break;
 
 		case ACT_DIAG_ENABLE_PULSE:
-			LL_PulseEnable(DataTable[REG_DEBUG]);
+			{
+				LL_PulseEnable(TRUE);
+				DELAY_US(1000000);
+				LL_PulseEnable(FALSE);
+			}
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
