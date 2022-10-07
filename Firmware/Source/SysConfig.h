@@ -13,7 +13,7 @@
 // ----------------------------------------------
 
 // USART
-#define USART_BAUDRATE					78125		// Скорость USART
+#define USART_BAUDRATE					115200		// Скорость USART
 #define USART_FIFOlen					32			// Длина FIFO USART
 // ----------------------------------------------
 
