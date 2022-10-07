@@ -29,11 +29,21 @@
 
 // REGISTERS
 //
+#define REG_PS_VOLTAGE_K			0	// Коэффициент для пересчёта напряжения питания
+#define REG_PS_VOLTAGE_OFFSET		1	// Смещение для пересчёта напряжения питания (в тиках)
+#define REG_VOLTAGE_RATE_K			2	// Коэффициент корректировки скорости нарастания напряжения
+// 3 - 19
+#define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
+#define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс)
+// 22 - 31								// Задания для промежуточных значений точек
+#define REG_SETPOINT_GATEV7			32	// Затворное напряжение, точка 7 (в мВ)
+#define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс)
+
 #define REG_DESIRED_GATE_V			128	// Desired gate voltage
 #define	REG_VRATE_RANGE				129 // Voltage rate selector
 //
 #define REG_DEBUG					150	// Отладочный регистр
-//
+
 #define REG_DEV_STATE				192	// Device state
 #define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
 #define REG_DISABLE_REASON			194	// Fault reason in the case DeviceState -> DISABLED
