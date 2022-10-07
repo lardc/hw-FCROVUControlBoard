@@ -9,6 +9,7 @@
 #include "LowLevel.h"
 #include "Board.h"
 #include "BCCIxParams.h"
+#include "SysConfig.h"
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
@@ -42,7 +43,10 @@ void CONTROL_Init()
 void CONTROL_Idle()
 {
 	DEVPROFILE_ProcessRequests();
-	IWDG_Refresh();
+
+	// Ожидание запроса перехода в бутлоадер
+	if(BOOT_LOADER_VARIABLE != BOOT_LOADER_REQUEST)
+		IWDG_Refresh();
 }
 //-----------------------------
 
