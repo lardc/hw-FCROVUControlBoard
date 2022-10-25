@@ -143,19 +143,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
-			{
-				LL_SWBoard(TRUE);
-				DELAY_US(1000000);
-				LL_SWBoard(FALSE);
-			}
+			LL_SWBoard(DataTable[REG_DEBUG]);
 			break;
 
 		case ACT_DIAG_SW_ATUPSBOARD:
-			{
-				LL_PSBoard(TRUE);
-				DELAY_US(1000000);
-				LL_PSBoard(FALSE);
-			}
+			LL_PSBoard(DataTable[REG_DEBUG]);
 			break;
 
 		case ACT_DIAG_ENABLE_PULSE:
@@ -167,9 +159,15 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
-			LL_PulseStart(true);
-			DELAY_US(100);
-			LL_PulseStart(false);
+			{
+				LL_PulseStart(true);
+				DELAY_US(100);
+				LL_PulseStart(false);
+			}
+			break;
+
+		case ACT_DIAG_UPDATE_SYNC_IN:
+			DataTable[REG_DBG_SYNC_IN] = GPIO_GetState(GPIO_SYNC_IN);
 			break;
 
 		default:
