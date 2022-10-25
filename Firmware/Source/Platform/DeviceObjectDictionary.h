@@ -20,6 +20,7 @@
 #define ACT_DIAG_SW_ATUPSBOARD		127	// Управление ЭМ ATUPSBoard
 #define ACT_DIAG_ENABLE_PULSE		128	// Разрешение входа запуска импульса
 #define ACT_DIAG_MANUAL_PULSE		129	// Ручной запуск импульса
+#define ACT_DIAG_UPDATE_SYNC_IN		130	// Записать состояние SYNC_IN в регистр
 
 #define ACT_SAVE_TO_ROM				200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM		201	// Восстановление данных из FLASH
@@ -43,6 +44,7 @@
 #define	REG_VRATE_RANGE				129 // Voltage rate selector
 //
 #define REG_DEBUG					150	// Отладочный регистр
+#define REG_DBG_SYNC_IN				151	// Состояние входа SYNC_IN
 
 #define REG_DEV_STATE				192	// Device state
 #define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
