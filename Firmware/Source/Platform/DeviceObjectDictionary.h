@@ -35,16 +35,15 @@
 #define REG_VOLTAGE_RATE_K			2	// Коэффициент корректировки скорости нарастания напряжения
 // 3 - 19
 #define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
-#define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс)
+#define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс x10)
 // 22 - 31								// Задания для промежуточных значений точек
 #define REG_SETPOINT_GATEV7			32	// Затворное напряжение, точка 7 (в мВ)
-#define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс)
+#define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс x10)
 
-#define REG_DESIRED_GATE_V			128	// Desired gate voltage
-#define	REG_VRATE_RANGE				129 // Voltage rate selector
+#define REG_VRATE_SETPOINT			128	// Задание скорости нарастания напряжения (В/мкс х 10)
 //
-#define REG_DEBUG					150	// Отладочный регистр
-#define REG_DBG_SYNC_IN				151	// Состояние входа SYNC_IN
+#define REG_DEBUG_COMM				150	// Отладочный регистр общего назначения
+#define REG_DEBUG_V_GATE_mV			151	// Отладочный регистр задания затворного напряжения
 
 #define REG_DEV_STATE				192	// Device state
 #define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
@@ -55,6 +54,9 @@
 //
 #define REG_ACTUAL_VOLTAGE			200	// Actual capacitor level
 #define REG_VOLTAGE_OK				201	// Charged flag
+//
+#define REG_DEBUG_SYNC_IN			210	// Состояние входа SYNC_IN
+#define REG_DEBUG_GATE_V_CALC_mV	211	// Рассчитанное затворное напряжение
 // -----------------------------
 #define REG_FWINFO_SLAVE_NID		256	// Device CAN slave node ID
 #define REG_FWINFO_MASTER_NID		257	// Device CAN master node ID (if presented)

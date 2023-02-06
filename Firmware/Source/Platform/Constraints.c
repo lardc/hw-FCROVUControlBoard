@@ -28,20 +28,20 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 17
 		{0, 0, 0},																	// 18
 		{0, 0, 0},																	// 19
-		{0, 0, 0},																	// 20
-		{0, 0, 0},																	// 21
-		{0, 0, 0},																	// 22
-		{0, 0, 0},																	// 23
-		{0, 0, 0},																	// 24
-		{0, 0, 0},																	// 25
-		{0, 0, 0},																	// 26
-		{0, 0, 0},																	// 27
-		{0, 0, 0},																	// 28
-		{0, 0, 0},																	// 29
-		{0, 0, 0},																	// 30
-		{0, 0, 0},																	// 31
-		{0, 0, 0},																	// 32
-		{0, 0, 0},																	// 33
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 20
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 21
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 22
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 23
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 24
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 25
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 26
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 27
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 28
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 29
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 30
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 31
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 32
+		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 33
 		{0, 0, 0},																	// 34
 		{0, 0, 0},																	// 35
 		{0, 0, 0},																	// 36
@@ -136,9 +136,9 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 125
 		{0, 0, 0},																	// 126
 		{0, 0, 0},																	// 127
-		{0, 5000, 0},																// 128
+		{VRATE_SET_MIN, VRATE_SET_MAX, VRATE_SET_DEF},								// 128
 		{0, 0, 0},																	// 129
-		{0, 1, 0},																	// 130
+		{0, 0, 0},																	// 130
 		{0, 0, 0},																	// 131
 		{0, 0, 0},																	// 132
 		{0, 0, 0},																	// 133
@@ -158,8 +158,8 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 147
 		{0, 0, 0},																	// 148
 		{0, 0, 0},																	// 149
-		{0, 1, 0},																	// 150
-		{0, 0, 0},																	// 151
+		{NO, YES, NO},																// 150
+		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 151
 		{0, 0, 0},																	// 152
 		{0, 0, 0},																	// 153
 		{0, 0, 0},																	// 154

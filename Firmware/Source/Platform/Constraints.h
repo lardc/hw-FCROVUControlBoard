@@ -11,15 +11,23 @@
 #include "Global.h"
 
 // Definitions
-// Gate voltage (in mV)
-#define GATE_VOLTAGE_MIN			0
-#define GATE_VOLTAGE_MAX			5000
-#define GATE_VOLTAGE_DEF			0
+#define NO							0
+#define YES							1
 
-// Rate range limits
-#define RATE_RANGE_MIN				0
-#define RATE_RANGE_MAX				2
-#define RATE_RANGE_DEF				0
+// Затворное напряжение расчётной таблицы (мВ)
+#define GATEV_POINT_MIN				0
+#define GATEV_POINT_MAX				5000
+#define GATEV_POINT_DEF				0
+
+// Скорость нарастания напряжения расчётной таблицы (В/мкс х10)
+#define VRATE_POINT_MIN				10
+#define VRATE_POINT_MAX				2000
+#define VRATE_POINT_DEF				10
+
+// Задание скорости нарастания (В/мкс x10)
+#define VRATE_SET_MIN				200
+#define VRATE_SET_MAX				2000
+#define VRATE_SET_DEF				200
 
 // Types
 typedef struct __TableItemConstraint

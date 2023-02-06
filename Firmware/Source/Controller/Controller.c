@@ -10,6 +10,7 @@
 #include "Board.h"
 #include "BCCIxParams.h"
 #include "SysConfig.h"
+#include "Setpoint.h"
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
@@ -19,9 +20,8 @@ volatile DeviceSubState CONTROL_SubState = SDS_None;
 static Boolean CycleActive = false;
 
 // Forward functions
-void CONTROL_PrepareGateOutput();
-static void CONTROL_ApplyParameters();
-static void CONTROL_FillDefault();
+Boolean CONTROL_ApplyParameters();
+void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 
 // Functions
@@ -50,16 +50,17 @@ void CONTROL_Idle()
 }
 //-----------------------------
 
-void CONTROL_PrepareGateOutput()
+Boolean CONTROL_ApplyParameters()
 {
-	LL_SetGateVoltage(DataTable[REG_DESIRED_GATE_V]);
-}
-//-----------------------------
-
-void CONTROL_ApplyParameters()
-{
-	CONTROL_PrepareGateOutput();
-	CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+	Int16U GateV = 0;
+	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
+	{
+		LL_SetGateVoltage(GateV);
+		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+		return TRUE;
+	}
+	else
+		return FALSE;
 }
 //-----------------------------
 
@@ -71,14 +72,12 @@ void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
 }
 //-----------------------------
 
-static void CONTROL_FillDefault()
+void CONTROL_FillDefault()
 {
 	DataTable[REG_DEV_STATE] = DS_None;
 	DataTable[REG_FAULT_REASON] = FAULT_NONE;
 	DataTable[REG_DISABLE_REASON] = DISABLE_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
-	
-	DataTable[REG_DESIRED_GATE_V] = GATE_VOLTAGE_DEF;
 }
 //-----------------------------
 
@@ -87,19 +86,16 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 	switch(ActionID)
 	{
 		case ACT_ENABLE_POWER:
-			DataTable[REG_DESIRED_GATE_V] = GATE_VOLTAGE_DEF;
-			CONTROL_ApplyParameters();
+			LL_SetGateVoltage(0);
 			CONTROL_SetDeviceState(DS_Powered, SDS_None);
 			break;
 			
 		case ACT_DISABLE_POWER:
+			LL_SetGateVoltage(0);
 			CONTROL_SetDeviceState(DS_None, SDS_None);
 			break;
 
 		case ACT_CLR_FAULT:
-			if(CONTROL_State == DS_Fault)
-				CONTROL_SetDeviceState(DS_None, SDS_None);
-			DataTable[REG_FAULT_REASON] = FAULT_NONE;
 			break;
 
 		case ACT_CLR_WARNING:
@@ -107,11 +103,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			CONTROL_ApplyParameters();
+			if(!CONTROL_ApplyParameters())
+				*UserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
-			CONTROL_PrepareGateOutput();
+			LL_SetGateVoltage(DataTable[REG_DEBUG_V_GATE_mV]);
 			break;
 			
 		case ACT_DIAG_SW_LOW_CURRENT:
@@ -127,47 +124,39 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 			
 		case ACT_DIAG_SW_LAMP:
-			{
-				LL_PanelLamp(TRUE);
-				DELAY_US(1000000);
-				LL_PanelLamp(FALSE);
-			}
+			LL_PanelLamp(TRUE);
+			DELAY_US(1000000);
+			LL_PanelLamp(FALSE);
 			break;
 
 		case ACT_DIAG_SW_FAN:
-			{
-				LL_Fan(TRUE);
-				DELAY_US(1000000);
-				LL_Fan(FALSE);
-			}
+			LL_Fan(TRUE);
+			DELAY_US(1000000);
+			LL_Fan(FALSE);
 			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
-			LL_SWBoard(DataTable[REG_DEBUG]);
+			LL_SWBoard(DataTable[REG_DEBUG_COMM]);
 			break;
 
 		case ACT_DIAG_SW_ATUPSBOARD:
-			LL_PSBoard(DataTable[REG_DEBUG]);
+			LL_PSBoard(DataTable[REG_DEBUG_COMM]);
 			break;
 
 		case ACT_DIAG_ENABLE_PULSE:
-			{
-				LL_PulseEnable(TRUE);
-				DELAY_US(1000000);
-				LL_PulseEnable(FALSE);
-			}
+			LL_PulseEnable(TRUE);
+			DELAY_US(1000000);
+			LL_PulseEnable(FALSE);
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
-			{
-				LL_PulseStart(true);
-				DELAY_US(100);
-				LL_PulseStart(false);
-			}
+			LL_PulseStart(true);
+			DELAY_US(100);
+			LL_PulseStart(false);
 			break;
 
 		case ACT_DIAG_UPDATE_SYNC_IN:
-			DataTable[REG_DBG_SYNC_IN] = GPIO_GetState(GPIO_SYNC_IN);
+			DataTable[REG_DEBUG_SYNC_IN] = GPIO_GetState(GPIO_SYNC_IN);
 			break;
 
 		default:
