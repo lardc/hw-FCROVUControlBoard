@@ -11,6 +11,7 @@
 #include "BCCIxParams.h"
 #include "SysConfig.h"
 #include "Setpoint.h"
+#include "Measurement.h"
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
@@ -23,6 +24,7 @@ static Boolean CycleActive = false;
 Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
+void CONTROL_HandleBatteryCharge();
 
 // Functions
 void CONTROL_Init()
@@ -42,6 +44,9 @@ void CONTROL_Init()
 
 void CONTROL_Idle()
 {
+	// Process battery charge
+	CONTROL_HandleBatteryCharge();
+
 	DEVPROFILE_ProcessRequests();
 
 	// Ожидание запроса перехода в бутлоадер
@@ -175,5 +180,13 @@ void CONTROL_AfterPulseProcess()
 		LL_PanelLamp(false);
 		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
 	}
+}
+//-----------------------------
+
+void CONTROL_HandleBatteryCharge()
+{
+	// Мониторинг уровня заряда батареи
+	float BatteryVoltage = MEASURE_GetBatteryVoltage();
+	DataTable[REG_ACTUAL_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
 }
 //-----------------------------
