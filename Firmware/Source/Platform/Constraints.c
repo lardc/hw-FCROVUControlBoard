@@ -136,8 +136,8 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 125
 		{0, 0, 0},																	// 126
 		{0, 0, 0},																	// 127
-		{VRATE_SET_MIN, VRATE_SET_MAX, VRATE_SET_DEF},								// 128
-		{0, 0, 0},																	// 129
+		{0, 0, 0},																	// 128
+		{VRATE_SET_MIN, VRATE_SET_MAX, VRATE_SET_DEF},								// 129
 		{0, 0, 0},																	// 130
 		{0, 0, 0},																	// 131
 		{0, 0, 0},																	// 132
