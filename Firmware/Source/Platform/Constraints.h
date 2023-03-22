@@ -21,7 +21,7 @@
 
 // Скорость нарастания напряжения расчётной таблицы (В/мкс х10)
 #define VRATE_POINT_MIN				10
-#define VRATE_POINT_MAX				2000
+#define VRATE_POINT_MAX				3000
 #define VRATE_POINT_DEF				10
 
 // Задание скорости нарастания (В/мкс x10)
