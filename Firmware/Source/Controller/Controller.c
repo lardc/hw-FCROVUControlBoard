@@ -117,15 +117,63 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 			
 		case ACT_DIAG_SW_LOW_CURRENT:
-			LL_OutCurrentLow();
+			GPIO_SetState(GPIO_PS_BOARD, true);
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+
+			DELAY_US(30000);
+
+			LL_PulseStart(true);
+			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			LL_PulseStart(false);
+
+			DELAY_US(100);
+
+			GPIO_SetState(GPIO_FAN, false);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+			GPIO_SetState(GPIO_PS_BOARD, false);
 			break;
 			
 		case ACT_DIAG_SW_MID_CURRENT:
-			LL_OutCurrentMid();
+			GPIO_SetState(GPIO_PS_BOARD, true);
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, true);
+			GPIO_SetState(GPIO_OUT_B1, false);
+
+			DELAY_US(30000);
+
+			LL_PulseStart(true);
+			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			LL_PulseStart(false);
+
+			DELAY_US(100);
+
+			GPIO_SetState(GPIO_FAN, false);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+			GPIO_SetState(GPIO_PS_BOARD, false);
 			break;
 			
 		case ACT_DIAG_SW_HIGH_CURRENT:
-			LL_OutCurrentHigh();
+			GPIO_SetState(GPIO_PS_BOARD, true);
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, true);
+			GPIO_SetState(GPIO_OUT_B1, true);
+
+			DELAY_US(30000);
+
+			LL_PulseStart(true);
+			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			LL_PulseStart(false);
+
+			DELAY_US(100);
+
+			GPIO_SetState(GPIO_FAN, false);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+			GPIO_SetState(GPIO_PS_BOARD, false);
 			break;
 			
 		case ACT_DIAG_SW_LAMP:
@@ -155,9 +203,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
-			LL_PulseStart(true);
-			DELAY_US(100);
-			LL_PulseStart(false);
 			break;
 
 		case ACT_DIAG_UPDATE_SYNC_IN:
