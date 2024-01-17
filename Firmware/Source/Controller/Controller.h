@@ -7,10 +7,13 @@
 // Types
 typedef enum __DeviceState
 {
-	DS_None			= 0,
-	DS_Fault		= 1,
-	DS_Disabled		= 2,
-	DS_Powered		= 3
+	DS_None					= 0,
+	DS_Fault				= 1,
+	DS_Disabled				= 2,
+	DS_BatteryCharging		= 3,
+	DS_Ready				= 4,
+	DS_ConfigReady			= 5,
+	DS_InProcess			= 6
 } DeviceState;
 
 typedef enum __DeviceSubState
@@ -34,5 +37,6 @@ void CONTROL_Idle();
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 // After pulse process
 void CONTROL_AfterPulseProcess();
+//
 
 #endif // CONTROLLER_H_

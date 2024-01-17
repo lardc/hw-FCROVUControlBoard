@@ -15,7 +15,7 @@ void EXTI0_IRQHandler()
 		LL_PanelLamp(true);
 		TIM_Start(TIM7);
 
-		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 	}
 	else
 	{

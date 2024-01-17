@@ -70,7 +70,7 @@ void LL_Fan(bool State)
 
 void LL_PSBoard(bool State)
 {
-	GPIO_SetState(GPIO_PS_BOARD, State);
+	GPIO_SetState(GPIO_PS_BOARD, !State);
 }
 //-----------------------------
 

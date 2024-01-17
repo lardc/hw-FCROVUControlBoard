@@ -12,9 +12,12 @@
 #include "SysConfig.h"
 #include "Setpoint.h"
 #include "Measurement.h"
+#include "Logic.h"
+
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
+Int64U CONTROL_BatteryChargeTimeCounter = 0;
 volatile Int64U AfterPulseTimeout = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
@@ -23,8 +26,9 @@ static Boolean CycleActive = false;
 // Forward functions
 Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_HandleBatteryCharge();
+void CONTROL_ResetToDefaults(bool StopPowerSupply);
 
 // Functions
 void CONTROL_Init()
@@ -38,7 +42,8 @@ void CONTROL_Init()
 	
 	// Сброс значений
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
-	CONTROL_FillDefault();
+	CONTROL_ResetToDefaults(true);
+
 }
 //-----------------------------
 
@@ -61,7 +66,7 @@ Boolean CONTROL_ApplyParameters()
 	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
 	{
 		LL_SetGateVoltage(GateV);
-		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+		CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
 		return TRUE;
 	}
 	else
@@ -77,30 +82,49 @@ void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
 }
 //-----------------------------
 
+void CONTROL_SwitchToFault(Int16U Reason)
+{
+	CONTROL_SetDeviceState(DS_Fault, SDS_None);
+	DataTable[REG_FAULT_REASON] = Reason;
+	LOGIC_ResetHWToDefaults(true);
+}
+//-----------------------------------------------
+
 void CONTROL_FillDefault()
 {
 	DataTable[REG_DEV_STATE] = DS_None;
-	DataTable[REG_FAULT_REASON] = FAULT_NONE;
+	DataTable[REG_FAULT_REASON] = DF_NONE;
 	DataTable[REG_DISABLE_REASON] = DISABLE_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
 }
 //-----------------------------
 
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 {
+	*pUserError = ERR_NONE;
+
 	switch(ActionID)
 	{
 		case ACT_ENABLE_POWER:
-			LL_SetGateVoltage(0);
-			CONTROL_SetDeviceState(DS_Powered, SDS_None);
+			if(CONTROL_State == DS_None)
+			{
+				CONTROL_BatteryChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_FULL];
+				CONTROL_SetDeviceState(DS_BatteryCharging, SDS_None);
+				LOGIC_BatteryCharge(true);
+				LL_SetGateVoltage(0);
+			}
+			else if(CONTROL_State != DS_Ready)
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DISABLE_POWER:
-			LL_SetGateVoltage(0);
+			CONTROL_ResetToDefaults(true);
 			CONTROL_SetDeviceState(DS_None, SDS_None);
 			break;
 
 		case ACT_CLR_FAULT:
+			if (CONTROL_State == DS_Fault)
+				CONTROL_ResetToDefaults(true);
 			break;
 
 		case ACT_CLR_WARNING:
@@ -109,7 +133,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_APPLY_PARAMS:
 			if(!CONTROL_ApplyParameters())
-				*UserError = ERR_OPERATION_BLOCKED;
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
@@ -117,7 +141,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 			
 		case ACT_DIAG_SW_LOW_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
+			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
@@ -125,7 +149,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			DELAY_US(30000);
 
 			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
 			LL_PulseStart(false);
 
 			DELAY_US(100);
@@ -133,11 +157,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			GPIO_SetState(GPIO_FAN, false);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
+			LOGIC_BatteryCharge(true);
 			break;
 			
 		case ACT_DIAG_SW_MID_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
+			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
@@ -145,7 +169,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			DELAY_US(30000);
 
 			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
 			LL_PulseStart(false);
 
 			DELAY_US(100);
@@ -153,11 +177,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			GPIO_SetState(GPIO_FAN, false);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
+			LOGIC_BatteryCharge(true);
 			break;
 			
 		case ACT_DIAG_SW_HIGH_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
+			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
@@ -165,7 +189,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			DELAY_US(30000);
 
 			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
+			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
 			LL_PulseStart(false);
 
 			DELAY_US(100);
@@ -173,7 +197,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			GPIO_SetState(GPIO_FAN, false);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
+			LOGIC_BatteryCharge(true);
 			break;
 			
 		case ACT_DIAG_SW_LAMP:
@@ -215,6 +239,27 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 	
 	return true;
 }
+
+//------------------------------
+void CONTROL_HandleBatteryCharge()
+{
+	// Мониторинг уровня заряда батареи
+	float BatteryVoltage = MEASURE_GetBatteryVoltage();
+	DataTable[REG_BAT_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
+
+	if (CONTROL_State == DS_BatteryCharging)
+	{
+		if (DataTable[REG_BAT_VOLTAGE] >= DataTable[REG_BAT_VOLTAGE_THRESHOLD])
+		{
+				CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		}
+		else
+		{
+			if (CONTROL_TimeCounter > CONTROL_BatteryChargeTimeCounter)
+				CONTROL_SwitchToFault(DF_BATTERY);
+		}
+	}
+}
 //-----------------------------
 
 void CONTROL_AfterPulseProcess()
@@ -223,15 +268,16 @@ void CONTROL_AfterPulseProcess()
 	{
 		AfterPulseTimeout = 0;
 		LL_PanelLamp(false);
-		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
 	}
 }
 //-----------------------------
-
-void CONTROL_HandleBatteryCharge()
+void CONTROL_ResetToDefaults(bool StopPowerSupply)
 {
-	// Мониторинг уровня заряда батареи
-	float BatteryVoltage = MEASURE_GetBatteryVoltage();
-	DataTable[REG_ACTUAL_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
+	LOGIC_ResetHWToDefaults(StopPowerSupply);
+
+	CONTROL_SetDeviceState(DS_None, SDS_None);
+	CONTROL_FillDefault();
 }
+//-----------------------------
 //-----------------------------

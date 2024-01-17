@@ -33,7 +33,9 @@
 #define REG_PS_VOLTAGE_K			0	// Коэффициент для пересчёта напряжения питания
 #define REG_PS_VOLTAGE_OFFSET		1	// Смещение для пересчёта напряжения питания (в тиках)
 #define REG_VOLTAGE_RATE_K			2	// Коэффициент корректировки скорости нарастания напряжения
-// 3 - 19
+#define REG_CHRAGE_TIMEOUT_FULL		3 	// Таймаут полного заряда батареи,мс
+#define	REG_BAT_VOLTAGE_THRESHOLD	4	// Минимальный порог заряда батареи, В *10
+// 5 - 19
 #define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
 #define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс x10)
 // 22 - 31								// Задания для промежуточных значений точек
@@ -52,7 +54,7 @@
 #define REG_PROBLEM					196	// Problem reason
 #define REG_OP_RESULT				197	// Indicates that test is done and there is result or fault
 //
-#define REG_ACTUAL_VOLTAGE			200	// Actual capacitor level
+#define REG_BAT_VOLTAGE				200	// Actual capacitor level
 #define REG_VOLTAGE_OK				201	// Charged flag
 //
 #define REG_DEBUG_SYNC_IN			210	// Состояние входа SYNC_IN
@@ -60,13 +62,15 @@
 // -----------------------------
 #define REG_FWINFO_SLAVE_NID		256	// Device CAN slave node ID
 #define REG_FWINFO_MASTER_NID		257	// Device CAN master node ID (if presented)
+#define REG_DEVICE_ID				258	// Device ID
 // 258 - 259
 #define REG_FWINFO_STR_LEN			260	// Length of the information string record
 #define REG_FWINFO_STR_BEGIN		261	// Begining of the information string record
 
 // FAULT CODES
 //
-#define FAULT_NONE					0
+#define DF_NONE						0
+#define DF_BATTERY					1		// Ошибка заряда батареи
 
 // WARNING CODES
 //
