@@ -33,7 +33,9 @@
 #define REG_PS_VOLTAGE_K			0	// Коэффициент для пересчёта напряжения питания
 #define REG_PS_VOLTAGE_OFFSET		1	// Смещение для пересчёта напряжения питания (в тиках)
 #define REG_VOLTAGE_RATE_K			2	// Коэффициент корректировки скорости нарастания напряжения
-// 3 - 19
+#define REG_CHRAGE_TIMEOUT_FULL		3 	// Таймаут полного заряда батареи,мс
+#define	REG_BAT_VOLTAGE_THRESHOLD	4	// Минимальный порог заряда батареи, В *10
+// 5 - 19
 #define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
 #define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс x10)
 // 22 - 31								// Задания для промежуточных значений точек
@@ -66,7 +68,8 @@
 
 // FAULT CODES
 //
-#define FAULT_NONE					0
+#define DF_NONE						0
+#define DF_BATTERY					1		// Ошибка заряда батареи
 
 // WARNING CODES
 //

@@ -12,9 +12,11 @@
 #include "SysConfig.h"
 #include "Setpoint.h"
 #include "Measurement.h"
+#include "Logic.h"
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
+volatile Int64U CONTROL_BatteryChargeTimeCounter = 0;
 volatile Int64U AfterPulseTimeout = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
@@ -23,7 +25,7 @@ static Boolean CycleActive = false;
 // Forward functions
 Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_HandleBatteryCharge();
 
 // Functions
@@ -61,7 +63,7 @@ Boolean CONTROL_ApplyParameters()
 	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
 	{
 		LL_SetGateVoltage(GateV);
-		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+		CONTROL_SetDeviceState(DS_Ready, SDS_WaitSync);
 		return TRUE;
 	}
 	else
@@ -77,22 +79,36 @@ void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
 }
 //-----------------------------
 
+void CONTROL_SwitchToFault(Int16U Reason)
+{
+	CONTROL_SetDeviceState(DS_Fault, SDS_None);
+	DataTable[REG_FAULT_REASON] = Reason;
+}
+//------------------------------
+
 void CONTROL_FillDefault()
 {
 	DataTable[REG_DEV_STATE] = DS_None;
-	DataTable[REG_FAULT_REASON] = FAULT_NONE;
+	DataTable[REG_FAULT_REASON] = DF_NONE;
 	DataTable[REG_DISABLE_REASON] = DISABLE_NONE;
 	DataTable[REG_WARNING] = WARNING_NONE;
 }
 //-----------------------------
 
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 {
+	*pUserError = ERR_NONE;
+
 	switch(ActionID)
 	{
 		case ACT_ENABLE_POWER:
-			LL_SetGateVoltage(0);
-			CONTROL_SetDeviceState(DS_Powered, SDS_None);
+			if(CONTROL_State == DS_None)
+			{
+				LOGIC_BatteryCharge(true);
+				LL_SetGateVoltage(0);
+			}
+			else if(CONTROL_State != DS_Ready)
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DISABLE_POWER:
@@ -109,7 +125,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 
 		case ACT_APPLY_PARAMS:
 			if(!CONTROL_ApplyParameters())
-				*UserError = ERR_OPERATION_BLOCKED;
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
@@ -223,7 +239,7 @@ void CONTROL_AfterPulseProcess()
 	{
 		AfterPulseTimeout = 0;
 		LL_PanelLamp(false);
-		CONTROL_SetDeviceState(DS_Powered, SDS_WaitSync);
+		CONTROL_SetDeviceState(DS_Ready, SDS_WaitSync);
 	}
 }
 //-----------------------------
@@ -233,5 +249,18 @@ void CONTROL_HandleBatteryCharge()
 	// Мониторинг уровня заряда батареи
 	float BatteryVoltage = MEASURE_GetBatteryVoltage();
 	DataTable[REG_ACTUAL_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
+
+	if(CONTROL_State == DS_BatteryCharging)
+	{
+		if(DataTable[REG_ACTUAL_VOLTAGE] >= DataTable[REG_BAT_VOLTAGE_THRESHOLD])
+		{
+			CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		}
+		else
+		{
+			if(CONTROL_TimeCounter > CONTROL_BatteryChargeTimeCounter)
+				CONTROL_SwitchToFault(DF_BATTERY);
+		}
+	}
 }
 //-----------------------------
