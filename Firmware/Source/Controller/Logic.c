@@ -5,20 +5,27 @@
 
 // Includes
 //
+#include "DeviceObjectDictionary.h"
+#include "DataTable.h"
 #include "Global.h"
 #include "LowLevel.h"
 #include "Board.h"
 #include "Delay.h"
-
+#include "Controller.h"
 // Definitions
 //
+#define CURRENT_RANGE_0				0
+#define CURRENT_RANGE_1				1
+#define CURRENT_RANGE_2				2
+#define CURRENT_RANGE_3				3
 
 // Structs
 //
 
 // Varibales
 //
-
+static Int64U Timeout;
+static Int64U TimePulse;
 // Forward functions
 //
 
@@ -36,7 +43,7 @@ void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 }
 //-----------------------------
 
-// Включение заряда батареи
+// Управление заряда батареи
 void LOGIC_BatteryCharge(bool State)
 {
 if (State)
@@ -51,7 +58,135 @@ if (State)
 		LL_SWBoard(false);
 	}
 }
+
+// ----------------------------
+
+// Управление реле выбора тока
+void LOGIC_SetOutCurrent()
+{
+	switch ((Int16U)DataTable[REG_CURRENT_SETPOINT])
+	{
+		case CURRENT_RANGE_0:
+		{
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+		}
+		break;
+
+		case CURRENT_RANGE_1:
+		{
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, true);
+			GPIO_SetState(GPIO_OUT_B1, false);
+		}
+		break;
+
+		case CURRENT_RANGE_2:
+		{
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, true);
+		}
+		break;
+
+		case CURRENT_RANGE_3:
+		{
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, true);
+			GPIO_SetState(GPIO_OUT_B1, true);
+		}
+		break;
+
+		default:
+		{
+			GPIO_SetState(GPIO_FAN, false);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, false);
+		}
+		break;
+		}
+}
+void LOGIC_TimePulse(Int16U VRate)
+{
+	TimePulse = DataTable[REG_BAT_VOLTAGE] / VRate + DOP_TIME_US;
+	return;
+}
+
 //-----------------------------
 
+void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
+{
+	Timeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
+	CONTROL_SetDeviceState(DS_InProcess, SDS_Mensure);
+}
+
+// ----------------------------
+
+void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
+{
+	Timeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
+	CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
+}
+
+// ----------------------------
+
+void LOGIC_TestSequence()
+{
+	LL_PulseStart(true);
+	DELAY_US(TimePulse);
+	LL_PulseStart(false);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
+}
 
 //-----------------------------
+
+void LOGIC_AfterPulseProcess()
+{
+	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
+	{
+		AfterPulseTimeout = 0;
+		LL_PanelLamp(false);
+		LL_Led2(false);
+		LOGIC_ResetHWToDefaults(false);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
+	}
+}
+
+//-----------------------------
+
+void LOGIC_Update(Int64U CONTROL_TimeCounter)
+{
+	if(CONTROL_SubState == SDS_Config)
+	{
+		CONTROL_ApplyParameters();
+	}
+	if(CONTROL_SubState == SDS_ConfigReady)
+	{
+		if(UsedSync)
+			LOGIC_BeginTest(CONTROL_TimeCounter);
+		else
+			LOGIC_ApplyParameters(CONTROL_TimeCounter);
+	}
+	if(CONTROL_SubState == SDS_Mensure)
+	{
+		LL_PanelLamp(TRUE);
+		LL_Led2(TRUE);
+		LOGIC_TestSequence();
+	}
+
+	if(CONTROL_SubState == SDS_RiseEdgeDetected)
+	{
+		CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
+	}
+	if(CONTROL_SubState == SDS_Pause)
+	{
+		LOGIC_AfterPulseProcess();
+		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
+	}
+	if(CONTROL_SubState == SDS_PostPulseCharg)
+	{
+		LOGIC_BatteryCharge(true);
+		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
+	}
+}

@@ -29,27 +29,6 @@ void LL_PanelLamp(bool State)
 }
 //-----------------------------
 
-void LL_OutCurrentLow()
-{
-	GPIO_SetState(GPIO_OUT_B0, false);
-	GPIO_SetState(GPIO_OUT_B1, false);
-}
-//-----------------------------
-
-void LL_OutCurrentMid()
-{
-	GPIO_SetState(GPIO_OUT_B0, true);
-	GPIO_SetState(GPIO_OUT_B1, false);
-}
-//-----------------------------
-
-void LL_OutCurrentHigh()
-{
-	GPIO_SetState(GPIO_OUT_B0, true);
-	GPIO_SetState(GPIO_OUT_B1, true);
-}
-//-----------------------------
-
 void LL_PulseEnable(bool State)
 {
 	GPIO_SetState(GPIO_PULSE_EN, State);
@@ -86,3 +65,4 @@ void LL_SetGateVoltage(Int16U Voltage)
 	DAC_SetValueCh1(DAC1, (DACValue > ADC_DAC_RESOLUTION) ? ADC_DAC_RESOLUTION : DACValue);
 }
 //-----------------------------
+

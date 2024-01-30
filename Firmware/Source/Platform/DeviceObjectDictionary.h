@@ -10,6 +10,15 @@
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
 //
+#define ACT_START_TEST_CUSTOM		100	// Start test custom voltage rate
+#define ACT_START_TEST_20			101	// Start test 20V/us
+#define ACT_START_TEST_50			102	// Start test 50V/us
+#define ACT_START_TEST_100			103	// Start test 100V/us
+#define ACT_START_TEST_200			104	// Start test 200V/us
+#define ACT_START_TEST_200_DUMMY	105	// Start test 200V/us
+#define ACT_ENABLE_EXT_SYNC_START	106	// Enable external sync
+#define ACT_DISABLE_EXT_SYNC_START	107	// Disable external sync
+//
 #define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
 #define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока
 #define ACT_DIAG_SW_MID_CURRENT		122	// Выбрать средний диапазон тока
@@ -43,6 +52,7 @@
 #define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс x10)
 
 #define REG_VRATE_SETPOINT			129	// Задание скорости нарастания напряжения (В/мкс х 10)
+#define REG_CURRENT_SETPOINT		130	// Задание тока
 //
 #define REG_DEBUG_COMM				150	// Отладочный регистр общего назначения
 #define REG_DEBUG_V_GATE_mV			151	// Отладочный регистр задания затворного напряжения

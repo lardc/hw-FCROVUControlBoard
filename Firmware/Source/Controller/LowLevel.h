@@ -9,9 +9,6 @@
 void LL_ToggleLed();
 void LL_Led2(bool State);
 void LL_PanelLamp(bool State);
-void LL_OutCurrentLow();
-void LL_OutCurrentMid();
-void LL_OutCurrentHigh();
 void LL_PulseEnable(bool State);
 void LL_PulseStart(bool State);
 void LL_Fan(bool State);

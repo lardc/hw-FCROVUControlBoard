@@ -18,17 +18,18 @@
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
 Int64U CONTROL_BatteryChargeTimeCounter = 0;
-volatile Int64U AfterPulseTimeout = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
 static Boolean CycleActive = false;
+volatile Boolean UsedSync;
 
 // Forward functions
-Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
+void CONTROL_PrepareStart(Int16U VRate, Boolean StartTest);
 void CONTROL_HandleBatteryCharge();
 void CONTROL_ResetToDefaults(bool StopPowerSupply);
+
 
 // Functions
 void CONTROL_Init()
@@ -58,20 +59,7 @@ void CONTROL_Idle()
 	if(BOOT_LOADER_VARIABLE != BOOT_LOADER_REQUEST)
 		IWDG_Refresh();
 }
-//-----------------------------
 
-Boolean CONTROL_ApplyParameters()
-{
-	Int16U GateV = 0;
-	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
-	{
-		LL_SetGateVoltage(GateV);
-		CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
-		return TRUE;
-	}
-	else
-		return FALSE;
-}
 //-----------------------------
 
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
@@ -118,8 +106,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 			
 		case ACT_DISABLE_POWER:
-			CONTROL_ResetToDefaults(true);
-			CONTROL_SetDeviceState(DS_None, SDS_None);
+			if((CONTROL_State == DS_Ready) || (CONTROL_State == DS_BatteryCharging))
+			{
+				CONTROL_ResetToDefaults(true);
+				CONTROL_SetDeviceState(DS_None, SDS_None);
+			}
 			break;
 
 		case ACT_CLR_FAULT:
@@ -132,15 +123,37 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			if(!CONTROL_ApplyParameters())
-				*pUserError = ERR_OPERATION_BLOCKED;
+			if(CONTROL_State == DS_Ready)
+				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], FALSE);
 			break;
 			
+		case ACT_START_TEST_CUSTOM:
+			CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], TRUE);
+			break;
+
+		case ACT_START_TEST_20:
+			CONTROL_PrepareStart(20 , TRUE);
+			break;
+
+		case ACT_START_TEST_50:
+			CONTROL_PrepareStart(50 , TRUE);
+			break;
+
+		case ACT_START_TEST_100:
+			CONTROL_PrepareStart(100 , TRUE);
+			break;
+
+		case ACT_START_TEST_200:
+		case ACT_START_TEST_200_DUMMY:
+			CONTROL_PrepareStart(200 , TRUE);
+			break;
+
 		case ACT_DIAG_SET_GATE_V:
 			LL_SetGateVoltage(DataTable[REG_DEBUG_V_GATE_mV]);
 			break;
 			
 		case ACT_DIAG_SW_LOW_CURRENT:
+			LL_PSBoard(false);
 			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
@@ -158,6 +171,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			LOGIC_BatteryCharge(true);
+			LL_PSBoard(true);
 			break;
 			
 		case ACT_DIAG_SW_MID_CURRENT:
@@ -240,6 +254,36 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 	return true;
 }
 
+//-----------------------------
+
+void CONTROL_ApplyParameters()
+{
+	Int16U GateV = 0;
+
+	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
+	{
+		LL_SetGateVoltage(GateV);
+		LOGIC_SetOutCurrent();
+		LOGIC_TimePulse(DataTable[REG_VRATE_SETPOINT]);
+
+		CONTROL_SetDeviceState(DS_InProcess, SDS_ConfigReady);
+	}
+}
+
+// -----------------------------
+
+void CONTROL_PrepareStart(Int16U VRate, Boolean StartTest)
+{
+	if(CONTROL_State == DS_Ready)
+	{
+		UsedSync = StartTest;
+		LOGIC_BatteryCharge(FALSE);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
+	}
+
+
+}
+
 //------------------------------
 void CONTROL_HandleBatteryCharge()
 {
@@ -260,17 +304,7 @@ void CONTROL_HandleBatteryCharge()
 		}
 	}
 }
-//-----------------------------
 
-void CONTROL_AfterPulseProcess()
-{
-	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
-	{
-		AfterPulseTimeout = 0;
-		LL_PanelLamp(false);
-		CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
-	}
-}
 //-----------------------------
 void CONTROL_ResetToDefaults(bool StopPowerSupply)
 {
@@ -280,4 +314,7 @@ void CONTROL_ResetToDefaults(bool StopPowerSupply)
 	CONTROL_FillDefault();
 }
 //-----------------------------
+
+
 //-----------------------------
+
