@@ -44,6 +44,7 @@
 #define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс x10)
 
 #define REG_VRATE_SETPOINT			129	// Задание скорости нарастания напряжения (В/мкс х 10)
+#define REG_CURRENT_SETPOINT		130	// Задание тока
 //
 #define REG_DEBUG_COMM				150	// Отладочный регистр общего назначения
 #define REG_DEBUG_V_GATE_mV			151	// Отладочный регистр задания затворного напряжения

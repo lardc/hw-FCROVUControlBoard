@@ -39,6 +39,10 @@
 #define VCHRAGE_MAX					6000
 #define VCHRAGE_DEF					5000
 
+// Диапазон выходного тока
+#define IRATE_RANGE_MIN				0
+#define IRATE_RANGE_MAX				3
+#define IRATE_RANGE_DEF				0
 // Types
 typedef struct __TableItemConstraint
 {

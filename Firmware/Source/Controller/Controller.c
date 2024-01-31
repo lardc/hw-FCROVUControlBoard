@@ -131,7 +131,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_ACT_START_TEST:
 			if(CONTROL_State == DS_Ready)
-				LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], true);
+				LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT],DataTable[REG_CURRENT_SETPOINT], true);
 			else if(CONTROL_State != DS_Ready)
 				*pUserError = ERR_OPERATION_BLOCKED;
 			break;

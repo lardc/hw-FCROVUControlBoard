@@ -11,6 +11,6 @@
 
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply);
 void LOGIC_BatteryCharge(bool State);
-extern void LOGIC_Prepare(float VRate, Boolean StartTest);
-
+extern void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest);
+void LOGIC_SetOutCurrent(float IRate);
 #endif //__LOGIC_H/
