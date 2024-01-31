@@ -1,9 +1,12 @@
 // Header
 //
+
 #include "Logic.h"
 
 // Includes
 //
+
+#include "Controller.h"
 #include "Board.h"
 #include "LowLevel.h"
 #include "Delay.h"
@@ -37,5 +40,12 @@ void LOGIC_BatteryCharge(bool State)
 		LL_PSBoard(false);
 		LL_SWBoard(false);
 	}
+}
+//-----------------------------
+
+void LOGIC_Prepare(float VRate, Boolean StartTest)
+{
+	LOGIC_BatteryCharge(FALSE);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
 }
 //-----------------------------

@@ -128,6 +128,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			if(!CONTROL_ApplyParameters())
 				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
+
+		case ACT_ACT_START_TEST:
+			if(CONTROL_State == DS_Ready)
+				LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], true);
+			else if(CONTROL_State != DS_Ready)
+				*pUserError = ERR_OPERATION_BLOCKED;
+			break;
 			
 		case ACT_DIAG_SET_GATE_V:
 			LL_SetGateVoltage(DataTable[REG_DEBUG_V_GATE_mV]);
@@ -232,6 +239,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 	
 	return true;
 }
+
 //-----------------------------
 
 void CONTROL_AfterPulseProcess()
@@ -243,6 +251,7 @@ void CONTROL_AfterPulseProcess()
 		CONTROL_SetDeviceState(DS_Ready, SDS_WaitSync);
 	}
 }
+
 //-----------------------------
 
 void CONTROL_HandleBatteryCharge()
@@ -264,6 +273,7 @@ void CONTROL_HandleBatteryCharge()
 		}
 	}
 }
+
 //-----------------------------
 
 void CONTROL_ResetToDefaults(bool StopPowerSupply)
@@ -275,4 +285,3 @@ void CONTROL_ResetToDefaults(bool StopPowerSupply)
 }
 
 //-----------------------------
-

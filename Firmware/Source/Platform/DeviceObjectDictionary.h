@@ -9,6 +9,7 @@
 #define ACT_CLR_WARNING				4	// Clear warning
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
+#define ACT_ACT_START_TEST			100 // Програмный запуск формирования
 //
 #define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
 #define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока
