@@ -6,6 +6,7 @@
 // Includes
 //
 
+#include "DataTable.h"
 #include "DeviceObjectDictionary.h"
 #include "Controller.h"
 #include "Board.h"
@@ -59,7 +60,7 @@ void LOGIC_BatteryCharge(bool State)
 
 //-----------------------------
 
-void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest , pInt16U *pUserError)
+void LOGIC_Prepare(Int16U VRate, Int16U IRate, Boolean StartTest, pInt16U UserError)
 {
 	if(CONTROL_State == DS_Ready)
 	{
@@ -72,16 +73,16 @@ void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest , pInt16U *pUserE
 			CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
 	}
 	else if(CONTROL_State != DS_Ready)
-		*pUserError = ERR_OPERATION_BLOCKED;
+		*UserError = ERR_OPERATION_BLOCKED;
 
 }
 
 //-----------------------------
 
 // Выставление тока
-void LOGIC_SetOutCurrent(float IRate)
+void LOGIC_SetOutCurrent(Int16U IRate)
 {
-	switch((Int16U)IRate)
+	switch(IRate)
 	{
 		case CURRENT_RANGE_0:
 			{
@@ -126,7 +127,7 @@ void LOGIC_SetOutCurrent(float IRate)
 }
 //-----------------------------
 
-void LOGIC_SetGateV(float VRate)
+void LOGIC_SetGateV(Int16U VRate)
 {
 	Int16U GateV = 0;
 	if(SP_GetSetpoint(VRate, &GateV))
@@ -143,6 +144,16 @@ Boolean LOGIC_SyncStart(Boolean StartTest)
 	else
 		return 1;
 
+}
+
+//-----------------------------
+
+void LOGIC_Mensure()
+{
+	Int32U Delay = 10ul * DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT] + PRE_PROBE_TIME_US;
+	LL_PulseStart(true);
+	DELAY_US(Delay);
+	LL_PulseStart(false);
 }
 
 //-----------------------------

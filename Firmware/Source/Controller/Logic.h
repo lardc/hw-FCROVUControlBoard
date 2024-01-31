@@ -11,8 +11,9 @@
 
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply);
 void LOGIC_BatteryCharge(bool State);
-extern void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest , pInt16U *pUserError);
-void LOGIC_SetOutCurrent(float IRate);
-void LOGIC_SetGateV(float VRate);
+extern void LOGIC_Prepare(Int16U VRate, Int16U IRate, Boolean StartTest , pInt16U UserError);
+void LOGIC_SetOutCurrent(Int16U IRate);
+void LOGIC_SetGateV(Int16U VRate);
 Boolean LOGIC_SyncStart(Boolean StartTest);
+void LOGIC_Mensure();
 #endif //__LOGIC_H/

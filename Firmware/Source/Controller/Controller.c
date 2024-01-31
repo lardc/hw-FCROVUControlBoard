@@ -25,7 +25,7 @@ static Boolean CycleActive = false;
 // Forward functions
 Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 void CONTROL_HandleBatteryCharge();
 
 // Functions
@@ -83,9 +83,9 @@ void CONTROL_FillDefault()
 }
 //-----------------------------
 
-static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
+static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 {
-	*pUserError = ERR_NONE;
+	*UserError = ERR_NONE;
 
 	switch(ActionID)
 	{
@@ -96,7 +96,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				LL_SetGateVoltage(0);
 			}
 			else if(CONTROL_State != DS_Ready)
-				*pUserError = ERR_OPERATION_BLOCKED;
+				*UserError = ERR_OPERATION_BLOCKED;
 			break;
 			
 		case ACT_DISABLE_POWER:
@@ -112,11 +112,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false , *pUserError );
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false , UserError );
 			break;
 
 		case ACT_ACT_START_TEST:
-			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], true, *pUserError);
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], true, UserError);
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
