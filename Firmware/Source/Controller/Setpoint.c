@@ -15,10 +15,10 @@
 #define SETPOINT_ARRAY_SIZE		7
 
 // Forward functions
-Boolean SP_Generate(Int16U VRate_x10, pInt16U GateV);
+Boolean SP_Generate(float VRate_x10, pInt16U GateV);
 
 // Functions
-Boolean SP_Generate(Int16U VRate_x10, pInt16U GateV)
+Boolean SP_Generate(float VRate_x10, pInt16U GateV)
 {
 	// Определение граничных скоростей нарастания в диапазоне
 	Int16U CellRateStartIndex = REG_SETPOINT_GATEV1 + 1;
@@ -62,7 +62,7 @@ Boolean SP_Generate(Int16U VRate_x10, pInt16U GateV)
 }
 // ----------------------------------------
 
-Boolean SP_GetSetpoint(Int16U VRate_x10, pInt16U GateV)
+Boolean SP_GetSetpoint(float VRate_x10, pInt16U GateV)
 {
 	if(SP_Generate(VRate_x10, GateV))
 	{

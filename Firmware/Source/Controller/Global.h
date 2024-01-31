@@ -43,4 +43,7 @@
 // Gate voltage settings
 #define GATE_ANALOG_GAIN				1.42f
 
+// Задержки в процессе тестирования (в мс)
+#define TEST_PREPARE_TIMEOUT_MS			5000		// Таймаут настройки ячеек
+
 #endif // __GLOBAL_H

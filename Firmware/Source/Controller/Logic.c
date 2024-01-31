@@ -8,6 +8,7 @@
 
 #include "Controller.h"
 #include "Board.h"
+#include "Global.h"
 #include "LowLevel.h"
 #include "Delay.h"
 
@@ -18,6 +19,11 @@
 #define CURRENT_RANGE_1				1
 #define CURRENT_RANGE_2				2
 #define CURRENT_RANGE_3				3
+
+// Varibales
+//
+
+Int64U Timeout;
 
 // Functions
 //
@@ -54,9 +60,19 @@ void LOGIC_BatteryCharge(bool State)
 
 void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest)
 {
-	LOGIC_BatteryCharge(FALSE);
-	LOGIC_SetOutCurrent(IRate);
-	CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
+	if(CONTROL_State == DS_Ready)
+	{
+		LOGIC_BatteryCharge(FALSE);
+		LOGIC_SetOutCurrent(IRate);
+		LOGIC_SetGateV(VRate);
+		if(LOGIC_SyncStart(StartTest))
+			CONTROL_SetDeviceState(DS_InProcess, SDS_Mensure);
+		else
+			CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
+	}
+	else if(CONTROL_State != DS_Ready)
+		*pUserError = ERR_OPERATION_BLOCKED;
+
 }
 
 //-----------------------------
@@ -107,4 +123,25 @@ void LOGIC_SetOutCurrent(float IRate)
 			break;
 	}
 }
+//-----------------------------
+
+void LOGIC_SetGateV(float VRate)
+{
+	Int16U GateV = 0;
+	if(SP_GetSetpoint(VRate, &GateV))
+		LL_SetGateVoltage(GateV);
+}
+
+//-----------------------------
+
+Boolean LOGIC_SyncStart(Boolean StartTest)
+{
+	Timeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
+	if(StartTest)
+		return 0;
+	else
+		return 1;
+
+}
+
 //-----------------------------

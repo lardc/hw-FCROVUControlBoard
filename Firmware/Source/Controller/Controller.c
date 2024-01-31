@@ -56,20 +56,7 @@ void CONTROL_Idle()
 	if(BOOT_LOADER_VARIABLE != BOOT_LOADER_REQUEST)
 		IWDG_Refresh();
 }
-//-----------------------------
 
-Boolean CONTROL_ApplyParameters()
-{
-	Int16U GateV = 0;
-	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
-	{
-		LL_SetGateVoltage(GateV);
-		CONTROL_SetDeviceState(DS_Ready, SDS_WaitSync);
-		return TRUE;
-	}
-	else
-		return FALSE;
-}
 //-----------------------------
 
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState)
@@ -125,15 +112,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			if(!CONTROL_ApplyParameters())
-				*pUserError = ERR_OPERATION_BLOCKED;
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false);
 			break;
 
 		case ACT_ACT_START_TEST:
-			if(CONTROL_State == DS_Ready)
-				LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT],DataTable[REG_CURRENT_SETPOINT], true);
-			else if(CONTROL_State != DS_Ready)
-				*pUserError = ERR_OPERATION_BLOCKED;
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], true);
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
