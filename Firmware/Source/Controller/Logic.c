@@ -13,6 +13,7 @@
 #include "Global.h"
 #include "LowLevel.h"
 #include "Delay.h"
+#include "Setpoint.h"
 
 // Definitions
 //
@@ -74,7 +75,6 @@ void LOGIC_Prepare(Int16U VRate, Int16U IRate, Boolean StartTest, pInt16U UserEr
 	}
 	else if(CONTROL_State != DS_Ready)
 		*UserError = ERR_OPERATION_BLOCKED;
-
 }
 
 //-----------------------------
@@ -125,6 +125,7 @@ void LOGIC_SetOutCurrent(Int16U IRate)
 			break;
 	}
 }
+
 //-----------------------------
 
 void LOGIC_SetGateV(Int16U VRate)
@@ -143,7 +144,6 @@ Boolean LOGIC_SyncStart(Boolean StartTest)
 		return 0;
 	else
 		return 1;
-
 }
 
 //-----------------------------
@@ -157,3 +157,4 @@ void LOGIC_Mensure()
 }
 
 //-----------------------------
+

@@ -10,7 +10,6 @@
 #include "Board.h"
 #include "BCCIxParams.h"
 #include "SysConfig.h"
-#include "Setpoint.h"
 #include "Measurement.h"
 #include "Logic.h"
 
