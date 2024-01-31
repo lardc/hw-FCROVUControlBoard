@@ -6,7 +6,6 @@
 #include "SysConfig.h"
 #include "BoardConfig.h"
 
-
 // Forward functions
 //
 void SysClk_Config();
@@ -16,13 +15,12 @@ void UART_Config();
 void Timer2_Config();
 void WatchDog_Config();
 
-
 // Functions
 //
 int main()
 {
 	// Set request flag if firmware update is required
-	if (*ProgramAddressStart == 0xFFFFFFFF || BOOT_LOADER_VARIABLE == BOOT_LOADER_REQUEST)
+	if(*ProgramAddressStart == 0xFFFFFFFF || BOOT_LOADER_VARIABLE == BOOT_LOADER_REQUEST)
 		WaitForFWUpload = TRUE;
 
 	// Init peripherals
@@ -37,7 +35,7 @@ int main()
 	CONTROL_Init();
 
 	// Infinite cycle
-	while (true)
+	while(true)
 		CONTROL_Idle();
 
 	return 0;
@@ -71,6 +69,9 @@ void IO_Config()
 	GPIO_InitPushPullOutput(GPIO_SW_BOARD);
 	GPIO_InitPushPullOutput(GPIO_LED1);
 	GPIO_InitPushPullOutput(GPIO_LED2);
+
+	// Выставление уровня выхода
+	GPIO_SetState(GPIO_PS_BOARD, true);
 
 	// Альтернативные функции портов
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
