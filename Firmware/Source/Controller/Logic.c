@@ -6,6 +6,7 @@
 // Includes
 //
 
+#include "DeviceObjectDictionary.h"
 #include "Controller.h"
 #include "Board.h"
 #include "Global.h"
@@ -58,7 +59,7 @@ void LOGIC_BatteryCharge(bool State)
 
 //-----------------------------
 
-void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest)
+void LOGIC_Prepare(float VRate, float IRate, Boolean StartTest , pInt16U *pUserError)
 {
 	if(CONTROL_State == DS_Ready)
 	{

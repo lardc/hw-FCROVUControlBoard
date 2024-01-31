@@ -112,11 +112,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false);
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false , *pUserError );
 			break;
 
 		case ACT_ACT_START_TEST:
-			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], true);
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], true, *pUserError);
 			break;
 			
 		case ACT_DIAG_SET_GATE_V:
