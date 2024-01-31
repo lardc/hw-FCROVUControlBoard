@@ -41,6 +41,7 @@ void CONTROL_Init()
 	// Сброс значений
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
 	CONTROL_FillDefault();
+	CONTROL_ResetToDefaults(true);
 }
 //-----------------------------
 
@@ -112,7 +113,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 			
 		case ACT_DISABLE_POWER:
-			LL_SetGateVoltage(0);
+			CONTROL_ResetToDefaults(true);
 			CONTROL_SetDeviceState(DS_None, SDS_None);
 			break;
 
@@ -264,3 +265,14 @@ void CONTROL_HandleBatteryCharge()
 	}
 }
 //-----------------------------
+
+void CONTROL_ResetToDefaults(bool StopPowerSupply)
+{
+	LOGIC_ResetHWToDefaults(StopPowerSupply);
+
+	CONTROL_SetDeviceState(DS_None, SDS_None);
+	CONTROL_FillDefault();
+}
+
+//-----------------------------
+

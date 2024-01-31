@@ -7,5 +7,6 @@
 
 //Functions
 //
+void LOGIC_ResetHWToDefaults(bool StopPowerSupply);
 void LOGIC_BatteryCharge(bool State);
 #endif //__LOGIC_H/

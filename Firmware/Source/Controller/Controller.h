@@ -35,5 +35,7 @@ void CONTROL_Idle();
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 // After pulse process
 void CONTROL_AfterPulseProcess();
+//
+void CONTROL_ResetToDefaults(bool StopPowerSupply);
 
 #endif // CONTROLLER_H_
