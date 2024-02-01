@@ -25,8 +25,8 @@
 
 // Varibales
 //
-
-Int64U Timeout;
+volatile Int64U AfterPulseTimeout = 0;
+volatile Int64U Timeout = 0;
 
 // Functions
 //
@@ -154,7 +154,19 @@ void LOGIC_Mensure()
 	LL_PulseStart(true);
 	DELAY_US(Delay);
 	LL_PulseStart(false);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
 }
 
 //-----------------------------
 
+void LOGIC_AfterPulseProcess()
+{
+	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
+	{
+		AfterPulseTimeout = 0;
+		LOGIC_BatteryCharge(true);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
+	}
+}
+
+//-----------------------------

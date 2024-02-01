@@ -16,7 +16,6 @@
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
 volatile Int64U CONTROL_BatteryChargeTimeCounter = 0;
-volatile Int64U AfterPulseTimeout = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
 static Boolean CycleActive = false;
@@ -220,18 +219,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 	}
 	
 	return true;
-}
-
-//-----------------------------
-
-void CONTROL_AfterPulseProcess()
-{
-	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
-	{
-		AfterPulseTimeout = 0;
-		LL_PanelLamp(false);
-		CONTROL_SetDeviceState(DS_Ready, SDS_WaitSync);
-	}
 }
 
 //-----------------------------

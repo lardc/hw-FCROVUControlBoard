@@ -29,7 +29,7 @@ typedef enum __DeviceSubState
 } DeviceSubState;
 
 // Variables
-extern volatile Int64U CONTROL_TimeCounter, AfterPulseTimeout;
+extern volatile Int64U CONTROL_TimeCounter;
 extern volatile DeviceState CONTROL_State;
 extern volatile DeviceSubState CONTROL_SubState;
 
@@ -40,8 +40,6 @@ void CONTROL_Init();
 void CONTROL_Idle();
 // Set device state
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
-// After pulse process
-void CONTROL_AfterPulseProcess();
 //
 void CONTROL_ResetToDefaults(bool StopPowerSupply);
 

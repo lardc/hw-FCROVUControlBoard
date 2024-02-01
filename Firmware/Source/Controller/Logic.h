@@ -6,6 +6,9 @@
 
 #include "stdinc.h"
 
+// Variables
+extern volatile Int64U AfterPulseTimeout;
+
 //Functions
 //
 
@@ -16,4 +19,5 @@ void LOGIC_SetOutCurrent(Int16U IRate);
 void LOGIC_SetGateV(Int16U VRate);
 Boolean LOGIC_SyncStart(Boolean StartTest);
 void LOGIC_Mensure();
+void LOGIC_AfterPulseProcess();
 #endif //__LOGIC_H/

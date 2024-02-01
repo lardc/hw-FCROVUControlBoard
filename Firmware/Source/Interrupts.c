@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Global.h"
 #include "SysConfig.h"
+#include "Logic.h"
 
 // Functions
 //
@@ -65,7 +66,7 @@ void TIM3_IRQHandler()
 			}
 		}
 		
-		CONTROL_AfterPulseProcess();
+		LOGIC_AfterPulseProcess();
 		TIM_StatusClear(TIM3);
 	}
 }
