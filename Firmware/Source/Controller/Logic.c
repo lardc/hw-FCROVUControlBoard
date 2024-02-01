@@ -36,15 +36,15 @@ void LOGIC_RealTime()
 {
 	if(CONTROL_State == DS_InProcess)
 	{
-		if(DeviceSubState == SDS_Mensure)
+		if(CONTROL_SubState == SDS_Mensure)
 		{
 			LOGIC_Mensure();
 		}
-		if(DeviceSubState == SDS_Pause)
+		if(CONTROL_SubState == SDS_Pause)
 		{
 			LOGIC_AfterPulseProcess();
 		}
-		if(DeviceSubState == SDS_PostPulseCharg)
+		if(CONTROL_SubState == SDS_PostPulseCharg)
 		{
 			CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
 		}
@@ -56,6 +56,7 @@ void LOGIC_RealTime()
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 {
 	LL_SetGateVoltage(0);
+	LOGIC_HandleExtLed(false);
 	GPIO_SetState(GPIO_FAN, false);
 	GPIO_SetState(GPIO_OUT_B0, false);
 	GPIO_SetState(GPIO_OUT_B1, false);
@@ -172,10 +173,12 @@ Boolean LOGIC_SyncStart(Boolean StartTest)
 
 void LOGIC_Mensure()
 {
+	LOGIC_HandleExtLed(true);
 	Int32U Delay = 10ul * DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT] + PRE_PROBE_TIME_US;
 	LL_PulseStart(true);
 	DELAY_US(Delay);
 	LL_PulseStart(false);
+	AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
 	CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
 }
 
@@ -185,9 +188,27 @@ void LOGIC_AfterPulseProcess()
 {
 	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
 	{
+		LOGIC_ResetHWToDefaults(false);
 		AfterPulseTimeout = 0;
 		LOGIC_BatteryCharge(true);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
+	}
+}
+
+//-----------------------------
+
+void LOGIC_HandleExtLed(Boolean IsImpulse)
+{
+	static Int64U ExtLedTimeout = 0;
+	if(IsImpulse)
+	{
+		LL_PanelLamp(true);
+		ExtLedTimeout = CONTROL_TimeCounter + EXT_LED_SWITCH_ON_TIME;
+	}
+	else
+	{
+		if(CONTROL_TimeCounter >= ExtLedTimeout)
+			LL_PanelLamp(false);
 	}
 }
 

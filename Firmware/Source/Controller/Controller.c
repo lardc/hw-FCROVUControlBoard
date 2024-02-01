@@ -38,7 +38,6 @@ void CONTROL_Init()
 	
 	// Сброс значений
 	DEVPROFILE_Init(&CONTROL_DispatchAction, &CycleActive);
-	CONTROL_FillDefault();
 	CONTROL_ResetToDefaults(true);
 }
 //-----------------------------
@@ -110,7 +109,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			break;
 
 		case ACT_APPLY_PARAMS:
-			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false , UserError );
+			LOGIC_Prepare(DataTable[REG_VRATE_SETPOINT], DataTable[REG_CURRENT_SETPOINT], false, UserError);
 			break;
 
 		case ACT_ACT_START_TEST:

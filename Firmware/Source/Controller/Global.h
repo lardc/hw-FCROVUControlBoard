@@ -12,6 +12,7 @@
 #define ENABLE_LOCKING					FALSE
 #define LED_BLINK_TIME					500		// (in ms)
 #define AFTER_PULSE_TIMEOUT				500		// (in ms)
+#define EXT_LED_SWITCH_ON_TIME			500		// (in ms)
 
 // TIM mask
 #define PWM_OUT_LOW_POL					0xFFFD
