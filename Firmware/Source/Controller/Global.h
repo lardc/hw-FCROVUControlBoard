@@ -45,5 +45,6 @@
 
 // Задержки в процессе тестирования
 #define TEST_PREPARE_TIMEOUT_MS			5000		// Таймаут настройки ячеек
-#define PRE_PROBE_TIME_US				100			// Полка напряжения
+#define PRE_PROBE_TIME_US				100			// Длительность полки формирования
+
 #endif // __GLOBAL_H

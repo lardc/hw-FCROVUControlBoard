@@ -31,6 +31,28 @@ volatile Int64U Timeout = 0;
 // Functions
 //
 
+void LOGIC_RealTime()
+
+{
+	if(CONTROL_State == DS_InProcess)
+	{
+		if(DeviceSubState == SDS_Mensure)
+		{
+			LOGIC_Mensure();
+		}
+		if(DeviceSubState == SDS_Pause)
+		{
+			LOGIC_AfterPulseProcess();
+		}
+		if(DeviceSubState == SDS_PostPulseCharg)
+		{
+			CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
+		}
+	}
+}
+
+//-----------------------------
+
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 {
 	LL_SetGateVoltage(0);

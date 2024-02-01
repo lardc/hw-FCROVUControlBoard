@@ -47,7 +47,7 @@ void CONTROL_Idle()
 {
 	// Process battery charge
 	CONTROL_HandleBatteryCharge();
-
+	LOGIC_RealTime();
 	DEVPROFILE_ProcessRequests();
 
 	// Ожидание запроса перехода в бутлоадер
