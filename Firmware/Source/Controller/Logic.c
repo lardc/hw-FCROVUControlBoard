@@ -17,11 +17,11 @@
 
 // Definitions
 //
-
 #define CURRENT_RANGE_0				0
 #define CURRENT_RANGE_1				1
 #define CURRENT_RANGE_2				2
 #define CURRENT_RANGE_3				3
+#define CURRENT_RANGE_4				4
 
 // Varibales
 //
@@ -57,9 +57,7 @@ void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 {
 	LL_SetGateVoltage(0);
 	LOGIC_HandleExtLed(false);
-	GPIO_SetState(GPIO_FAN, false);
-	GPIO_SetState(GPIO_OUT_B0, false);
-	GPIO_SetState(GPIO_OUT_B1, false);
+	LOGIC_SetOutCurrent(CURRENT_RANGE_0);
 	if(StopPowerSupply)
 		LOGIC_BatteryCharge(false);
 }
@@ -109,7 +107,7 @@ void LOGIC_SetOutCurrent(Int16U IRate)
 	{
 		case CURRENT_RANGE_0:
 			{
-				GPIO_SetState(GPIO_FAN, true);
+				GPIO_SetState(GPIO_FAN, false);
 				GPIO_SetState(GPIO_OUT_B0, false);
 				GPIO_SetState(GPIO_OUT_B1, false);
 			}
@@ -118,7 +116,7 @@ void LOGIC_SetOutCurrent(Int16U IRate)
 		case CURRENT_RANGE_1:
 			{
 				GPIO_SetState(GPIO_FAN, true);
-				GPIO_SetState(GPIO_OUT_B0, true);
+				GPIO_SetState(GPIO_OUT_B0, false);
 				GPIO_SetState(GPIO_OUT_B1, false);
 			}
 			break;
@@ -126,12 +124,20 @@ void LOGIC_SetOutCurrent(Int16U IRate)
 		case CURRENT_RANGE_2:
 			{
 				GPIO_SetState(GPIO_FAN, true);
+				GPIO_SetState(GPIO_OUT_B0, true);
+				GPIO_SetState(GPIO_OUT_B1, false);
+			}
+			break;
+
+		case CURRENT_RANGE_3:
+			{
+				GPIO_SetState(GPIO_FAN, true);
 				GPIO_SetState(GPIO_OUT_B0, false);
 				GPIO_SetState(GPIO_OUT_B1, true);
 			}
 			break;
 
-		case CURRENT_RANGE_3:
+		case CURRENT_RANGE_4:
 			{
 				GPIO_SetState(GPIO_FAN, true);
 				GPIO_SetState(GPIO_OUT_B0, true);
