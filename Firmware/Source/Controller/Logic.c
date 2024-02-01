@@ -58,6 +58,7 @@ void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 	LL_SetGateVoltage(0);
 	LOGIC_HandleExtLed(false);
 	LOGIC_SetOutCurrent(CURRENT_RANGE_0);
+	LL_PulseEnable(false);
 	if(StopPowerSupply)
 		LOGIC_BatteryCharge(false);
 }
@@ -89,6 +90,7 @@ void LOGIC_Prepare(Int16U VRate, Int16U IRate, Boolean StartTest, pInt16U UserEr
 		LOGIC_BatteryCharge(FALSE);
 		LOGIC_SetOutCurrent(IRate);
 		LOGIC_SetGateV(VRate);
+		LL_PulseEnable(true);
 		if(LOGIC_SyncStart(StartTest))
 			CONTROL_SetDeviceState(DS_InProcess, SDS_Mensure);
 		else

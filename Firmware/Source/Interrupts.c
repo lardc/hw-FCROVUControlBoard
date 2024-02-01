@@ -16,7 +16,7 @@ void EXTI0_IRQHandler()
 		LOGIC_HandleExtLed(true);
 		TIM_Start(TIM7);
 
-		CONTROL_SetDeviceState(DS_Ready, SDS_RiseEdgeDetected);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 	}
 	else
 	{

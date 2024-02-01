@@ -72,6 +72,7 @@ void IO_Config()
 
 	// Выставление уровня выхода
 	GPIO_SetState(GPIO_PS_BOARD, true);
+	GPIO_SetState(GPIO_PULSE_EN, true);
 
 	// Альтернативные функции портов
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);

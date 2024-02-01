@@ -21,7 +21,6 @@ volatile DeviceSubState CONTROL_SubState = SDS_None;
 static Boolean CycleActive = false;
 
 // Forward functions
-Boolean CONTROL_ApplyParameters();
 void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError);
 void CONTROL_HandleBatteryCharge();
@@ -120,77 +119,12 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U UserError)
 			LL_SetGateVoltage(DataTable[REG_DEBUG_V_GATE_mV]);
 			break;
 			
-		case ACT_DIAG_SW_LOW_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
-			GPIO_SetState(GPIO_FAN, true);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
-			break;
-			
-		case ACT_DIAG_SW_MID_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
-			GPIO_SetState(GPIO_FAN, true);
-			GPIO_SetState(GPIO_OUT_B0, true);
-			GPIO_SetState(GPIO_OUT_B1, false);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
-			break;
-			
-		case ACT_DIAG_SW_HIGH_CURRENT:
-			GPIO_SetState(GPIO_PS_BOARD, true);
-			GPIO_SetState(GPIO_FAN, true);
-			GPIO_SetState(GPIO_OUT_B0, true);
-			GPIO_SetState(GPIO_OUT_B1, true);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_ACTUAL_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			GPIO_SetState(GPIO_PS_BOARD, false);
-			break;
-			
 		case ACT_DIAG_SW_LAMP:
 			LL_PanelLamp(TRUE);
 			DELAY_US(1000000);
 			LL_PanelLamp(FALSE);
 			break;
 
-		case ACT_DIAG_SW_FAN:
-			LL_Fan(TRUE);
-			DELAY_US(1000000);
-			LL_Fan(FALSE);
-			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
 			LL_SWBoard(DataTable[REG_DEBUG_COMM]);

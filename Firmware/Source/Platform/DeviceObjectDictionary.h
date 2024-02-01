@@ -12,16 +12,12 @@
 #define ACT_ACT_START_TEST			100 // Програмный запуск формирования
 //
 #define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
-#define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока
-#define ACT_DIAG_SW_MID_CURRENT		122	// Выбрать средний диапазон тока
-#define ACT_DIAG_SW_HIGH_CURRENT	123	// Выбрать верхний диапазон тока
-#define ACT_DIAG_SW_LAMP			124	// Управление лампой на передней панели
-#define ACT_DIAG_SW_FAN				125	// Управление вентилятором
-#define ACT_DIAG_SW_DRCUSWBOARD		126	// Управление ЭМ DRCUSwitchBoard
-#define ACT_DIAG_SW_ATUPSBOARD		127	// Управление ЭМ ATUPSBoard
-#define ACT_DIAG_ENABLE_PULSE		128	// Разрешение входа запуска импульса
-#define ACT_DIAG_MANUAL_PULSE		129	// Ручной запуск импульса
-#define ACT_DIAG_UPDATE_SYNC_IN		130	// Записать состояние SYNC_IN в регистр
+#define ACT_DIAG_SW_LAMP			121	// Управление лампой на передней панели
+#define ACT_DIAG_SW_DRCUSWBOARD		122	// Управление ЭМ DRCUSwitchBoard
+#define ACT_DIAG_SW_ATUPSBOARD		123	// Управление ЭМ ATUPSBoard
+#define ACT_DIAG_ENABLE_PULSE		124	// Разрешение входа запуска импульса
+#define ACT_DIAG_MANUAL_PULSE		125	// Ручной запуск импульса
+#define ACT_DIAG_UPDATE_SYNC_IN		126	// Записать состояние SYNC_IN в регистр
 
 #define ACT_SAVE_TO_ROM				200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM		201	// Восстановление данных из FLASH
