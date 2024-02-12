@@ -29,30 +29,9 @@ void LL_PanelLamp(bool State)
 }
 //-----------------------------
 
-void LL_OutCurrentLow()
-{
-	GPIO_SetState(GPIO_OUT_B0, false);
-	GPIO_SetState(GPIO_OUT_B1, false);
-}
-//-----------------------------
-
-void LL_OutCurrentMid()
-{
-	GPIO_SetState(GPIO_OUT_B0, true);
-	GPIO_SetState(GPIO_OUT_B1, false);
-}
-//-----------------------------
-
-void LL_OutCurrentHigh()
-{
-	GPIO_SetState(GPIO_OUT_B0, true);
-	GPIO_SetState(GPIO_OUT_B1, true);
-}
-//-----------------------------
-
 void LL_PulseEnable(bool State)
 {
-	GPIO_SetState(GPIO_PULSE_EN, State);
+	GPIO_SetState(GPIO_PULSE_EN, !State);
 }
 //-----------------------------
 
@@ -62,15 +41,9 @@ void LL_PulseStart(bool State)
 }
 //-----------------------------
 
-void LL_Fan(bool State)
-{
-	GPIO_SetState(GPIO_FAN, State);
-}
-//-----------------------------
-
 void LL_PSBoard(bool State)
 {
-	GPIO_SetState(GPIO_PS_BOARD, State);
+	GPIO_SetState(GPIO_PS_BOARD, !State);
 }
 //-----------------------------
 

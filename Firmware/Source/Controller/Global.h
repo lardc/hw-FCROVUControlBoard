@@ -12,6 +12,7 @@
 #define ENABLE_LOCKING					FALSE
 #define LED_BLINK_TIME					500		// (in ms)
 #define AFTER_PULSE_TIMEOUT				500		// (in ms)
+#define EXT_LED_SWITCH_ON_TIME			500		// (in ms)
 
 // TIM mask
 #define PWM_OUT_LOW_POL					0xFFFD
@@ -42,5 +43,9 @@
 
 // Gate voltage settings
 #define GATE_ANALOG_GAIN				1.42f
+
+// Задержки в процессе тестирования
+#define TEST_PREPARE_TIMEOUT_MS			5000		// Таймаут настройки ячеек
+#define PRE_PROBE_TIME_US				100			// Длительность полки формирования
 
 #endif // __GLOBAL_H

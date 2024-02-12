@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Global.h"
 #include "SysConfig.h"
+#include "Logic.h"
 
 // Functions
 //
@@ -12,15 +13,18 @@ void EXTI0_IRQHandler()
 {
 	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
 	{
-		LL_PanelLamp(true);
+		LOGIC_HandleExtLed(true);
 		TIM_Start(TIM7);
 
-		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 	}
 	else
 	{
 		if(GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_RiseEdgeDetected)
+		{
 			AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
+			CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
+		}
 	}
 
 	EXTI_FlagReset(EXTI_0);
@@ -39,7 +43,7 @@ void USART1_IRQHandler()
 
 void USB_LP_CAN_RX0_IRQHandler()
 {
-	if (NCAN_RecieveCheck())
+	if(NCAN_RecieveCheck())
 	{
 		NCAN_RecieveData();
 		NCAN_RecieveFlagReset();
@@ -64,8 +68,7 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		
-		CONTROL_AfterPulseProcess();
+		LOGIC_HandleExtLed(false);
 		TIM_StatusClear(TIM3);
 	}
 }

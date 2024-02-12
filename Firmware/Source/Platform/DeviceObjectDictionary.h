@@ -9,18 +9,15 @@
 #define ACT_CLR_WARNING				4	// Clear warning
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
+#define ACT_ACT_START_TEST			100 // Програмный запуск формирования
 //
 #define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
-#define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока
-#define ACT_DIAG_SW_MID_CURRENT		122	// Выбрать средний диапазон тока
-#define ACT_DIAG_SW_HIGH_CURRENT	123	// Выбрать верхний диапазон тока
-#define ACT_DIAG_SW_LAMP			124	// Управление лампой на передней панели
-#define ACT_DIAG_SW_FAN				125	// Управление вентилятором
-#define ACT_DIAG_SW_DRCUSWBOARD		126	// Управление ЭМ DRCUSwitchBoard
-#define ACT_DIAG_SW_ATUPSBOARD		127	// Управление ЭМ ATUPSBoard
-#define ACT_DIAG_ENABLE_PULSE		128	// Разрешение входа запуска импульса
-#define ACT_DIAG_MANUAL_PULSE		129	// Ручной запуск импульса
-#define ACT_DIAG_UPDATE_SYNC_IN		130	// Записать состояние SYNC_IN в регистр
+#define ACT_DIAG_SW_LAMP			121	// Управление лампой на передней панели
+#define ACT_DIAG_SW_DRCUSWBOARD		122	// Управление ЭМ DRCUSwitchBoard
+#define ACT_DIAG_SW_ATUPSBOARD		123	// Управление ЭМ ATUPSBoard
+#define ACT_DIAG_ENABLE_PULSE		124	// Разрешение входа запуска импульса
+#define ACT_DIAG_MANUAL_PULSE		125	// Ручной запуск импульса
+#define ACT_DIAG_UPDATE_SYNC_IN		126	// Записать состояние SYNC_IN в регистр
 
 #define ACT_SAVE_TO_ROM				200	// Сохранение пользовательских данных во FLASH процессора
 #define ACT_RESTORE_FROM_ROM		201	// Восстановление данных из FLASH
@@ -33,7 +30,9 @@
 #define REG_PS_VOLTAGE_K			0	// Коэффициент для пересчёта напряжения питания
 #define REG_PS_VOLTAGE_OFFSET		1	// Смещение для пересчёта напряжения питания (в тиках)
 #define REG_VOLTAGE_RATE_K			2	// Коэффициент корректировки скорости нарастания напряжения
-// 3 - 19
+#define REG_CHRAGE_TIMEOUT_FULL		3 	// Таймаут полного заряда батареи,мс
+#define	REG_BAT_VOLTAGE_THRESHOLD	4	// Минимальный порог заряда батареи, В *10
+// 5 - 19
 #define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
 #define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс x10)
 // 22 - 31								// Задания для промежуточных значений точек
@@ -41,6 +40,7 @@
 #define REG_SETPOINT_VRATE7			33	// Скорость нарастания напряжения, точка 7 (в В/мкс x10)
 
 #define REG_VRATE_SETPOINT			129	// Задание скорости нарастания напряжения (В/мкс х 10)
+#define REG_CURRENT_SETPOINT		130	// Задание тока
 //
 #define REG_DEBUG_COMM				150	// Отладочный регистр общего назначения
 #define REG_DEBUG_V_GATE_mV			151	// Отладочный регистр задания затворного напряжения
@@ -66,7 +66,8 @@
 
 // FAULT CODES
 //
-#define FAULT_NONE					0
+#define DF_NONE						0
+#define DF_BATTERY					1		// Ошибка заряда батареи
 
 // WARNING CODES
 //

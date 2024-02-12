@@ -29,6 +29,20 @@
 #define VRATE_SET_MAX				2000
 #define VRATE_SET_DEF				200
 
+// Время Timeout заряда батареи (мкс)
+#define TIMECHRAGE_MIN				1000
+#define TIMECHRAGE_MAX				50000
+#define TIMECHRAGE_DEF				5000
+
+// Напряжение заряда батареи (В x10)
+#define VCHRAGE_MIN					3000
+#define VCHRAGE_MAX					6000
+#define VCHRAGE_DEF					5000
+
+// Диапазон выходного тока
+#define IRATE_RANGE_MIN				0
+#define IRATE_RANGE_MAX				3
+#define IRATE_RANGE_DEF				0
 // Types
 typedef struct __TableItemConstraint
 {
