@@ -10,11 +10,7 @@
 //
 #define ACT_APPLY_PARAMS			10	// Apply params
 //
-#define ACT_START_TEST_CUSTOM		100	// Start test custom voltage rate
-#define ACT_START_TEST_20			101	// Start test 20V/us
-#define ACT_START_TEST_50			102	// Start test 50V/us
-#define ACT_START_TEST_100			103	// Start test 100V/us
-#define ACT_START_TEST_200			104	// Start test 200V/us
+#define ACT_START_TEST				100	// Start test
 //
 #define ACT_DIAG_SET_GATE_V			120	// Задать затворное напряжение
 #define ACT_DIAG_SW_LOW_CURRENT		121	// Выбрать нижний диапазон тока

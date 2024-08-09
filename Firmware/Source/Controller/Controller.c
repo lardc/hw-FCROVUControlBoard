@@ -125,26 +125,15 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_APPLY_PARAMS:
 			if(CONTROL_State == DS_Ready)
 				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], FALSE);
+			else
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 			
-		case ACT_START_TEST_CUSTOM:
-			CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], TRUE);
-			break;
-
-		case ACT_START_TEST_20:
-			CONTROL_PrepareStart(20 , TRUE);
-			break;
-
-		case ACT_START_TEST_50:
-			CONTROL_PrepareStart(50 , TRUE);
-			break;
-
-		case ACT_START_TEST_100:
-			CONTROL_PrepareStart(100 , TRUE);
-			break;
-
-		case ACT_START_TEST_200:
-			CONTROL_PrepareStart(200 , TRUE);
+		case ACT_START_TEST:
+			if(CONTROL_State == DS_Ready)
+				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], TRUE);
+			else
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 
 		case ACT_DIAG_SET_GATE_V:
@@ -273,14 +262,9 @@ void CONTROL_ApplyParameters()
 
 void CONTROL_PrepareStart(Int16U VRate, Boolean StartTest)
 {
-	if(CONTROL_State == DS_Ready)
-	{
 		UsedSync = StartTest;
 		LOGIC_BatteryCharge(FALSE);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
-	}
-
-
 }
 
 //------------------------------
