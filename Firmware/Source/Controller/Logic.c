@@ -12,22 +12,11 @@
 #include "Board.h"
 #include "Delay.h"
 #include "Controller.h"
-// Definitions
-//
-#define CURRENT_RANGE_0				0
-#define CURRENT_RANGE_1				1
-#define CURRENT_RANGE_2				2
-#define CURRENT_RANGE_3				3
-
-// Structs
-//
 
 // Varibales
 //
 static Int64U Timeout;
 static Int64U TimePulse;
-// Forward functions
-//
 
 // Functions
 //

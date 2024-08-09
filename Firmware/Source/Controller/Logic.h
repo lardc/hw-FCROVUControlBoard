@@ -4,6 +4,12 @@
 // Includes
 //
 #include "stdinc.h"
+// Definitions
+//
+#define CURRENT_RANGE_0				0
+#define CURRENT_RANGE_1				1
+#define CURRENT_RANGE_2				2
+#define CURRENT_RANGE_3				3
 
 //Functions
 //

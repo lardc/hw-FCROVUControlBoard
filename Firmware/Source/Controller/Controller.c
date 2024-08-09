@@ -111,6 +111,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 				CONTROL_ResetToDefaults(true);
 				CONTROL_SetDeviceState(DS_None, SDS_None);
 			}
+			else if(CONTROL_State != DS_None)
+				*pUserError = ERR_OPERATION_BLOCKED;
 			break;
 
 		case ACT_CLR_FAULT:
@@ -126,14 +128,20 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			if(CONTROL_State == DS_Ready)
 				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], FALSE);
 			else
-				*pUserError = ERR_OPERATION_BLOCKED;
+				if (CONTROL_State == DS_InProcess)
+					*pUserError = ERR_OPERATION_BLOCKED;
+				else
+					*pUserError = ERR_DEVICE_NOT_READY;
 			break;
 			
 		case ACT_START_TEST:
 			if(CONTROL_State == DS_Ready)
 				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], TRUE);
 			else
-				*pUserError = ERR_OPERATION_BLOCKED;
+				if(CONTROL_State == DS_InProcess)
+					*pUserError = ERR_OPERATION_BLOCKED;
+				else
+					*pUserError = ERR_DEVICE_NOT_READY;
 			break;
 
 		case ACT_DIAG_SET_GATE_V:
