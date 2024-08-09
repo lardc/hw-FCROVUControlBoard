@@ -41,10 +41,10 @@ void LL_PulseStart(bool State)
 }
 //-----------------------------
 
-void LL_Fan(bool State)
-{
-	GPIO_SetState(GPIO_FAN, State);
-}
+//void LL_Fan(bool State)
+//{
+//	GPIO_SetState(GPIO_FAN, State);
+//}
 //-----------------------------
 
 void LL_PSBoard(bool State)

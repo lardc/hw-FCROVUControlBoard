@@ -150,65 +150,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 			
 		case ACT_DIAG_SW_LOW_CURRENT:
-			LL_PSBoard(false);
-			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			LOGIC_BatteryCharge(true);
-			LL_PSBoard(true);
 			break;
 			
 		case ACT_DIAG_SW_MID_CURRENT:
-			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			LOGIC_BatteryCharge(true);
 			break;
 			
 		case ACT_DIAG_SW_HIGH_CURRENT:
-			LOGIC_BatteryCharge(false);
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
-
-			DELAY_US(30000);
-
-			LL_PulseStart(true);
-			DELAY_US((DataTable[REG_BAT_VOLTAGE] / DataTable[REG_VRATE_SETPOINT]) + 10);
-			LL_PulseStart(false);
-
-			DELAY_US(100);
-
-			GPIO_SetState(GPIO_FAN, false);
-			GPIO_SetState(GPIO_OUT_B0, false);
-			GPIO_SetState(GPIO_OUT_B1, false);
-			LOGIC_BatteryCharge(true);
 			break;
 			
 		case ACT_DIAG_SW_LAMP:
@@ -217,11 +173,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			LL_PanelLamp(FALSE);
 			break;
 
-		case ACT_DIAG_SW_FAN:
-			LL_Fan(TRUE);
-			DELAY_US(1000000);
-			LL_Fan(FALSE);
-			break;
+		//case ACT_DIAG_SW_FAN:
+		//	LL_Fan(TRUE);
+		//	DELAY_US(1000000);
+		//	LL_Fan(FALSE);
+		//	break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
 			LL_SWBoard(DataTable[REG_DEBUG_COMM]);
