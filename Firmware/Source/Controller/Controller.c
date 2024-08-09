@@ -144,7 +144,6 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_START_TEST_200:
-		case ACT_START_TEST_200_DUMMY:
 			CONTROL_PrepareStart(200 , TRUE);
 			break;
 
@@ -314,7 +313,5 @@ void CONTROL_ResetToDefaults(bool StopPowerSupply)
 	CONTROL_FillDefault();
 }
 //-----------------------------
-
-
 //-----------------------------
 

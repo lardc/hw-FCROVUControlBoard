@@ -141,20 +141,6 @@ void LOGIC_TestSequence()
 
 //-----------------------------
 
-void LOGIC_AfterPulseProcess()
-{
-	if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
-	{
-		AfterPulseTimeout = 0;
-		LL_PanelLamp(false);
-		LL_Led2(false);
-		LOGIC_ResetHWToDefaults(false);
-		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
-	}
-}
-
-//-----------------------------
-
 void LOGIC_Update(Int64U CONTROL_TimeCounter)
 {
 	if(CONTROL_SubState == SDS_Config)
@@ -181,7 +167,6 @@ void LOGIC_Update(Int64U CONTROL_TimeCounter)
 	}
 	if(CONTROL_SubState == SDS_Pause)
 	{
-		LOGIC_AfterPulseProcess();
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 	}
 	if(CONTROL_SubState == SDS_PostPulseCharg)

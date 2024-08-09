@@ -6,6 +6,11 @@
 #include "Global.h"
 #include "SysConfig.h"
 #include "Logic.h"
+
+// Variables
+//
+static uint64_t AfterPulseTimeout = 0;
+
 // Functions
 //
 void EXTI0_IRQHandler()
@@ -51,6 +56,7 @@ void TIM3_IRQHandler()
 {
 	static uint16_t CounterTmp = 0, CounterLed = 0;
 
+
 	if(TIM_StatusCheck(TIM3))
 	{
 		if(++CounterTmp >= (1000 / TIMER3_uS))
@@ -64,8 +70,14 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		
-		LOGIC_AfterPulseProcess();
+		if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
+			{
+				AfterPulseTimeout = 0;
+				LL_PanelLamp(false);
+				LL_Led2(false);
+				LOGIC_ResetHWToDefaults(false);
+				CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
+			}
 		TIM_StatusClear(TIM3);
 	}
 }

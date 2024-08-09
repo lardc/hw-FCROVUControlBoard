@@ -35,7 +35,7 @@
 #define TIMECHRAGE_DEF				5000
 
 // Напряжение заряда батареи (В x10)
-#define VCHRAGE_MIN					3000
+#define VCHRAGE_MIN					0
 #define VCHRAGE_MAX					6000
 #define VCHRAGE_DEF					5000
 // Types
