@@ -50,12 +50,13 @@
 #define REG_DEBUG_COMM				150	// Отладочный регистр общего назначения
 #define REG_DEBUG_V_GATE_mV			151	// Отладочный регистр задания затворного напряжения
 
-#define REG_DEV_STATE				192	// Device state
+#define REG_DEV_STATE				192	// Регистр состояния
 #define REG_FAULT_REASON			193	// Fault reason in the case DeviceState -> FAULT
 #define REG_DISABLE_REASON			194	// Fault reason in the case DeviceState -> DISABLED
 #define REG_WARNING					195	// Warning if present
 #define REG_PROBLEM					196	// Problem reason
 #define REG_OP_RESULT				197	// Indicates that test is done and there is result or fault
+#define REG_SUB_STATE				198	// Регистр вспомогательного состояния
 //
 #define REG_BAT_VOLTAGE				200	// Напряжение на конденсаторах
 #define REG_VOLTAGE_OK				201	// Charged flag

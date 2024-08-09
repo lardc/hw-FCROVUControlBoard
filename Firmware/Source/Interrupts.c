@@ -78,6 +78,7 @@ void TIM3_IRQHandler()
 				LOGIC_ResetHWToDefaults(false);
 				CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 			}
+		LOGIC_Update();
 		TIM_StatusClear(TIM3);
 	}
 }

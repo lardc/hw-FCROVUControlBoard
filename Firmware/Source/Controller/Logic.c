@@ -130,7 +130,7 @@ void LOGIC_TestSequence()
 
 //-----------------------------
 
-void LOGIC_Update(Int64U CONTROL_TimeCounter)
+void LOGIC_Update()
 {
 	if(CONTROL_SubState == SDS_Config)
 	{
