@@ -13,7 +13,7 @@
 
 // Functions
 //
-void EXTI0_IRQHandler()
+void EXTI9_5_IRQHandler()
 {
 	if(CONTROL_SubState == SDS_WaitSync)
 	{
@@ -31,7 +31,7 @@ void EXTI0_IRQHandler()
 		}
 	}
 
-	EXTI_FlagReset(EXTI_0);
+	EXTI_FlagReset(EXTI_5);
 }
 //-----------------------------------------
 

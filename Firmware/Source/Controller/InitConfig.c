@@ -19,8 +19,8 @@ Boolean INITCFG_ConfigSystemClock()
 void INITCFG_ConfigEI()
 {
 	// Sync
-	EXTI_Config(EXTI_PB, EXTI_0, BOTH_TRIG, 0);
-	EXTI_EnableInterrupt(EXTI0_IRQn, 0, true);
+	EXTI_Config(EXTI_PA, EXTI_5, BOTH_TRIG, 0);
+	EXTI_EnableInterrupt(EXTI9_5_IRQn, 0, true);
 }
 //------------------------------------------------------------------------------
 
