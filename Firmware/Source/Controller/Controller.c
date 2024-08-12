@@ -26,7 +26,7 @@ volatile Boolean UsedSync;
 // Forward functions
 void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
-void CONTROL_PrepareStart(Int16U VRate, Boolean StartTest);
+void CONTROL_PrepareStart(Boolean StartTest);
 void CONTROL_HandleBatteryCharge();
 void CONTROL_ResetToDefaults(bool StopPowerSupply);
 
@@ -127,7 +127,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_APPLY_PARAMS:
 			if(CONTROL_State == DS_Ready)
-				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], FALSE);
+				CONTROL_PrepareStart(FALSE);
 			else
 				if (CONTROL_State == DS_InProcess)
 					*pUserError = ERR_OPERATION_BLOCKED;
@@ -137,7 +137,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			
 		case ACT_START_TEST:
 			if(CONTROL_State == DS_Ready)
-				CONTROL_PrepareStart(DataTable[REG_VRATE_SETPOINT], TRUE);
+				CONTROL_PrepareStart(TRUE);
 			else
 				if(CONTROL_State == DS_InProcess)
 					*pUserError = ERR_OPERATION_BLOCKED;
@@ -225,7 +225,7 @@ void CONTROL_ApplyParameters()
 
 // -----------------------------
 
-void CONTROL_PrepareStart(Int16U VRate, Boolean StartTest)
+void CONTROL_PrepareStart(Boolean StartTest)
 {
 		UsedSync = StartTest;
 		LOGIC_BatteryCharge(FALSE);

@@ -6,26 +6,29 @@
 #include "Global.h"
 #include "SysConfig.h"
 #include "Logic.h"
+#include "DeviceObjectDictionary.h"
+#include "DataTable.h"
 
-// Variables
-//
-static uint64_t AfterPulseTimeout = 0;
+
 
 // Functions
 //
 void EXTI0_IRQHandler()
 {
-	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
+	if(CONTROL_SubState == SDS_WaitSync)
 	{
-		LL_PanelLamp(true);
-		TIM_Start(TIM7);
+		if(GPIO_GetState(GPIO_SYNC_IN))
+		{
+			LL_PanelLamp(true);
+			TIM_Start(TIM7);
 
-		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
-	}
-	else
-	{
-		if(GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_RiseEdgeDetected)
-			AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
+			CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
+		}
+		if (CONTROL_TimeCounter >= StartTimeout)
+		{
+			CONTROL_SetDeviceState(DS_Ready, SDS_None);
+			DataTable[REG_WARNING] = WARNING_NO_SYNC;
+		}
 	}
 
 	EXTI_FlagReset(EXTI_0);
@@ -70,14 +73,7 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		if(AfterPulseTimeout && (CONTROL_TimeCounter > AfterPulseTimeout))
-			{
-				AfterPulseTimeout = 0;
-				LL_PanelLamp(false);
-				LL_Led2(false);
-				LOGIC_ResetHWToDefaults(false);
-				CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
-			}
+
 		LOGIC_Update();
 		TIM_StatusClear(TIM3);
 	}

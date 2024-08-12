@@ -15,7 +15,7 @@
 
 // Varibales
 //
-static Int64U Timeout;
+volatile Int64U SwitchTime = 0, StartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
 static Int64U TimePulse;
 
 // Functions
@@ -106,7 +106,6 @@ void LOGIC_TimePulse(Int16U VRate)
 
 void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 {
-	Timeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
 	CONTROL_SetDeviceState(DS_InProcess, SDS_Mensure);
 }
 
@@ -114,8 +113,9 @@ void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 {
-	Timeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
 	CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
+	StartTimeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
+	return;
 }
 
 // ----------------------------
@@ -125,7 +125,7 @@ void LOGIC_TestSequence()
 	LL_PulseStart(true);
 	DELAY_US(TimePulse);
 	LL_PulseStart(false);
-	CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
 }
 
 //-----------------------------
@@ -135,8 +135,9 @@ void LOGIC_Update()
 	if(CONTROL_SubState == SDS_Config)
 	{
 		CONTROL_ApplyParameters();
+		SwitchTime = CONTROL_TimeCounter + SWITCH_TIME_US;
 	}
-	if(CONTROL_SubState == SDS_ConfigReady)
+	if(CONTROL_SubState == SDS_ConfigReady && (CONTROL_TimeCounter >= SwitchTime))
 	{
 		if(UsedSync)
 			LOGIC_BeginTest(CONTROL_TimeCounter);
@@ -148,17 +149,21 @@ void LOGIC_Update()
 		LL_PanelLamp(TRUE);
 		LL_Led2(TRUE);
 		LOGIC_TestSequence();
+		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
 	}
-
-	if(CONTROL_SubState == SDS_RiseEdgeDetected)
+	if(CONTROL_SubState == SDS_RiseEdgeDetected && !GPIO_GetState(GPIO_SYNC_IN))
 	{
-		CONTROL_SetDeviceState(DS_InProcess, SDS_Pause);
+		AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
+		CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
 	}
-	if(CONTROL_SubState == SDS_Pause)
+	if(CONTROL_SubState == SDS_FallEdge && (CONTROL_TimeCounter >= FallEdgeTime))
 	{
+		LL_PanelLamp(FALSE);
+		LL_Led2(FALSE);
+		LOGIC_ResetHWToDefaults(false);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 	}
-	if(CONTROL_SubState == SDS_PostPulseCharg)
+	if(CONTROL_SubState == SDS_PostPulseCharg && (CONTROL_TimeCounter >= AfterPulseTimeout))
 	{
 		LOGIC_BatteryCharge(true);
 		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);

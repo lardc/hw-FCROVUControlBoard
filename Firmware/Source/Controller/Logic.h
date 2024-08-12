@@ -11,12 +11,14 @@
 #define CURRENT_RANGE_2				2
 #define CURRENT_RANGE_3				3
 
+extern volatile Int64U StartTimeout;
+
 //Functions
 //
 void LOGIC_BatteryCharge(bool State);
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply);
-void LOGIC_BeginTest(Int64U TimerTicks);
-void LOGIC_ApplyParameters(Int64U TimerTicks);
+void LOGIC_BeginTest(Int64U CONTROL_TimeCounter);
+void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter);
 void LOGIC_SetOutCurrent();
 void LOGIC_TimePulse(Int16U VRate);
 void LOGIC_Update();

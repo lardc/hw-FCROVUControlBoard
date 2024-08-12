@@ -24,7 +24,7 @@ typedef enum __DeviceSubState
 	SDS_Mensure,
 	SDS_WaitSync,
 	SDS_RiseEdgeDetected,
-	SDS_Pause,
+	SDS_FallEdge,
 	SDS_PostPulseCharg
 } DeviceSubState;
 

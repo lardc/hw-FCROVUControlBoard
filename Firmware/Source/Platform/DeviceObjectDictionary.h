@@ -17,7 +17,7 @@
 #define ACT_DIAG_SW_MID_CURRENT		122	// Выбрать средний диапазон тока
 #define ACT_DIAG_SW_HIGH_CURRENT	123	// Выбрать верхний диапазон тока
 #define ACT_DIAG_SW_LAMP			124	// Управление лампой на передней панели
-#define ACT_DIAG_SW_FAN				125	// Управление вентилятором
+//#define ACT_DIAG_SW_FAN			125	// Управление вентилятором
 #define ACT_DIAG_SW_DRCUSWBOARD		126	// Управление ЭМ DRCUSwitchBoard
 #define ACT_DIAG_SW_ATUPSBOARD		127	// Управление ЭМ ATUPSBoard
 #define ACT_DIAG_ENABLE_PULSE		128	// Разрешение входа запуска импульса
@@ -79,6 +79,8 @@
 // WARNING CODES
 //
 #define WARNING_NONE				0
+#define WARNING_NO_SYNC				1		// Нет внешнего импульса синхронизации
+#define WARNING_SYNC_TIMEOUT		2		// Длительность синхронизации больше допустимого
 
 // DISABLE CODES
 //
