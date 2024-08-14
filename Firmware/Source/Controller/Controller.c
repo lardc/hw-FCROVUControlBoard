@@ -189,11 +189,14 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_DIAG_ENABLE_PULSE:
 			LL_PulseEnable(TRUE);
-			DELAY_US(1000000);
+			DELAY_US(100000);
 			LL_PulseEnable(FALSE);
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
+			LL_PulseStart(TRUE);
+			DELAY_US(100000);
+			LL_PulseStart(FALSE);
 			break;
 
 		case ACT_DIAG_UPDATE_SYNC_IN:

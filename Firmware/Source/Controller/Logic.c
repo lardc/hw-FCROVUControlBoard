@@ -15,7 +15,7 @@
 
 // Varibales
 //
-volatile Int64U SwitchTime = 0, StartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
+volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
 static Int64U TimePulse;
 
 // Functions
@@ -23,10 +23,12 @@ static Int64U TimePulse;
 // —брос аппаратных линий в состо€ни€ по умолчанию
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 {
+	LL_PulseEnable(false);
 	LL_SetGateVoltage(0);
 	GPIO_SetState(GPIO_FAN, false);
 	GPIO_SetState(GPIO_OUT_B0, false);
 	GPIO_SetState(GPIO_OUT_B1, false);
+
 	if (StopPowerSupply)
 			LOGIC_BatteryCharge(false);
 }
@@ -114,7 +116,8 @@ void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 {
 	CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
-	StartTimeout = CONTROL_TimeCounter + TEST_PREPARE_TIMEOUT_MS;
+	LL_PulseEnable(true);
+	SyncStartTimeout = CONTROL_TimeCounter + SYNC_TIMEOUT_US;
 	return;
 }
 
@@ -135,6 +138,7 @@ void LOGIC_Update()
 	if(CONTROL_SubState == SDS_Config)
 	{
 		CONTROL_ApplyParameters();
+		LL_PulseEnable(true);
 		SwitchTime = CONTROL_TimeCounter + SWITCH_TIME_US;
 	}
 	if(CONTROL_SubState == SDS_ConfigReady && (CONTROL_TimeCounter >= SwitchTime))
@@ -146,8 +150,8 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_Mensure)
 	{
-		LL_PanelLamp(TRUE);
-		LL_Led2(TRUE);
+		LL_PanelLamp(true);
+		LL_Led2(true);
 		LOGIC_TestSequence();
 		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
 	}
@@ -158,8 +162,9 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_FallEdge && (CONTROL_TimeCounter >= FallEdgeTime))
 	{
-		LL_PanelLamp(FALSE);
-		LL_Led2(FALSE);
+		LL_PulseEnable(false);
+		LL_PanelLamp(false);
+		LL_Led2(false);
 		LOGIC_ResetHWToDefaults(false);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 	}

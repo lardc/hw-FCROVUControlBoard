@@ -11,7 +11,7 @@
 #define CURRENT_RANGE_2				2
 #define CURRENT_RANGE_3				3
 
-extern volatile Int64U StartTimeout;
+extern volatile Int64U SyncStartTimeout;
 
 //Functions
 //

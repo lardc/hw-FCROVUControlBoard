@@ -44,9 +44,9 @@
 #define GATE_ANALOG_GAIN				1.42f
 
 // Задержки в процессе тестирования (в мс)
-#define SWITCH_TIME_US					500			// Задержка включения реле
-#define TEST_PREPARE_TIMEOUT_MS			5000		// Таймаут настройки ячеек
+#define SWITCH_TIME_US					20			// Задержка включения реле
+#define SYNC_TIMEOUT_US					5000		// Таймаут синхронизации после конфигурации ячеек
 #define DOP_TIME_US						100			// Длительность полки
-#define FALL_TIME_US					500			// Длительность заднего фронта
-
+#define FALL_TIME_US					20			// Длительность заднего фронта
+#define WIDTH_SYNC_LINE_MAX				500			// Максимальная длительность импульса синхронизации, мс
 #endif // __GLOBAL_H
