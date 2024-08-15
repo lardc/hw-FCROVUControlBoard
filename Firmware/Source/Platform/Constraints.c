@@ -9,8 +9,8 @@
 // Constants
 //
 const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
-		{0, 0, 0},																	// 0
-		{0, 0, 0},																	// 1
+		{0, INT16U_MAX, 0},															// 0
+		{0, INT16U_MAX, 0},															// 1
 		{0, 0, 0},																	// 2
 		{TIMECHRAGE_MIN, TIMECHRAGE_MAX, TIMECHRAGE_DEF},							// 3
 		{VCHRAGE_MIN, VCHRAGE_MAX ,VCHRAGE_DEF},									// 4
@@ -161,7 +161,7 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 149
 		{NO, YES, NO},																// 150
 		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 151
-		{0, 0, 0},																	// 152
+		{0, INT16U_MAX, 0},															// 152
 		{0, 0, 0},																	// 153
 		{0, 0, 0},																	// 154
 		{0, 0, 0},																	// 155
