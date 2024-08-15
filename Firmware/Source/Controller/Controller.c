@@ -18,6 +18,7 @@
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
 Int64U CONTROL_BatteryChargeTimeCounter = 0;
+Int16U VoltageRate, Current = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
 static Boolean CycleActive = false;
@@ -216,10 +217,10 @@ void CONTROL_ApplyParameters()
 {
 	Int16U GateV = 0;
 
-	if(SP_GetSetpoint(DataTable[REG_VRATE_SETPOINT], &GateV))
+	if(SP_GetSetpoint(VoltageRate, &GateV))
 	{
 		LL_SetGateVoltage(GateV);
-		LOGIC_SetOutCurrent();
+		LOGIC_SetOutCurrent(LOGIC_SetCurrentRange(Current));
 		LOGIC_TimePulse(DataTable[REG_VRATE_SETPOINT]);
 
 		CONTROL_SetDeviceState(DS_InProcess, SDS_ConfigReady);
@@ -230,11 +231,18 @@ void CONTROL_ApplyParameters()
 
 void CONTROL_PrepareStart(Boolean StartTest)
 {
+	VoltageRate = (Int16U)DataTable[REG_VRATE_SETPOINT];
+	Current = (Int16U)DataTable[REG_CURRENT_SETPOINT];
+	if(VRATE_SET_MIN <= VoltageRate && VoltageRate <= VRATE_SET_MAX && CURRENT_SET_MIN <= Current &&  Current <= CURRENT_SET_MAX)
+	 {
 		UsedSync = StartTest;
 		LOGIC_BatteryCharge(FALSE);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
-}
 
+	 }
+	else
+		DataTable[REG_WARNING] = WARNING_BAD_CONFIG;
+}
 //------------------------------
 void CONTROL_HandleBatteryCharge()
 {

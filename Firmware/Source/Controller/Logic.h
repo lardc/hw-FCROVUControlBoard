@@ -19,7 +19,8 @@ void LOGIC_BatteryCharge(bool State);
 void LOGIC_ResetHWToDefaults(bool StopPowerSupply);
 void LOGIC_BeginTest(Int64U CONTROL_TimeCounter);
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter);
-void LOGIC_SetOutCurrent();
+Int16U LOGIC_SetCurrentRange(Int16U Current);
+void LOGIC_SetOutCurrent(Int16U CurrentRange);
 void LOGIC_TimePulse(Int16U VRate);
 void LOGIC_Update();
 

@@ -17,7 +17,7 @@
 //
 volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
 static Int64U TimePulse;
-
+Int16U CurrentRange = 0;
 // Functions
 //
 // —брос аппаратных линий в состо€ни€ по умолчанию
@@ -52,10 +52,16 @@ if (State)
 
 // ----------------------------
 
-// ”правление реле выбора тока
-void LOGIC_SetOutCurrent()
+Int16U LOGIC_SetCurrentRange(Int16U Current)
 {
-	switch ((Int16U)DataTable[REG_CURRENT_SETPOINT])
+	CurrentRange = (Current / CH_CURRENT) + 1;
+	return (CurrentRange > CH_MAX) ? CH_MAX : CurrentRange;
+}
+
+// ”правление реле выбора тока
+void LOGIC_SetOutCurrent(Int16U CurrentRange)
+{
+	switch (CurrentRange)
 	{
 		case CURRENT_RANGE_0:
 		{
