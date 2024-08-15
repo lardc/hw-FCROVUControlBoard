@@ -176,13 +176,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			
 		case ACT_DIAG_SW_LAMP:
 			LL_PanelLamp(TRUE);
-			DELAY_US(1000000);
+			DELAY_US(DataTable[REG_DEBUG_COMM]);
 			LL_PanelLamp(FALSE);
 			break;
 
 		//case ACT_DIAG_SW_FAN:
 		//	LL_Fan(TRUE);
-		//	DELAY_US(1000000);
+		//	DELAY_US(DataTable[REG_DEBUG_COMM]);
 		//	LL_Fan(FALSE);
 		//	break;
 			

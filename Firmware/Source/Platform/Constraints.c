@@ -159,9 +159,9 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, 0, 0},																	// 147
 		{0, 0, 0},																	// 148
 		{0, 0, 0},																	// 149
-		{NO, YES, NO},																// 150
+		{0, INT16U_MAX, 0},															// 150
 		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 151
-		{0, INT16U_MAX, 0},															// 152
+		{0, 0, 0},																	// 152
 		{0, 0, 0},																	// 153
 		{0, 0, 0},																	// 154
 		{0, 0, 0},																	// 155
