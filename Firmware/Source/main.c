@@ -35,7 +35,6 @@ int main()
 
 	// Настройка таймеров
 	INITCFG_ConfigTimer3();
-	INITCFG_ConfigTimer6();
 	INITCFG_ConfigTimer7();
 
 	// Настройка сторожевого таймера

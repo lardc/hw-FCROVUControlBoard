@@ -72,10 +72,12 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-
-		LOGIC_Update();
-		INT_NOExtSyncControl();
-		INT_SyncWidthControl();
+		if(CONTROL_State == DS_InProcess)
+		{
+			LOGIC_Update();
+			INT_NOExtSyncControl();
+			INT_SyncWidthControl();
+		}
 		TIM_StatusClear(TIM3);
 	}
 }

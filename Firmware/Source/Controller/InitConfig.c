@@ -113,15 +113,6 @@ void INITCFG_ConfigTimer3()
 }
 //------------------------------------------------------------------------------
 
-void INITCFG_ConfigTimer6()
-{
-	TIM_Clock_En(TIM_6);
-	TIM_Config(TIM6, SYSCLK, TIMER6_uS);
-	TIM_MasterMode(TIM6, MMS_UPDATE);
-	TIM_Start(TIM6);
-}
-//------------------------------------------------------------------------------
-
 void INITCFG_ConfigTimer7()
 {
 	TIM_Clock_En(TIM_7);

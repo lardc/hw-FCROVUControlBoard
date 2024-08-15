@@ -150,19 +150,25 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			LL_SetGateVoltage(DataTable[REG_DEBUG_V_GATE_mV]);
 			break;
 			
-		case ACT_DIAG_SW_LOW_CURRENT:
+		case ACT_DIAG_SW_RANGE_CURRENT_0:
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
 			
-		case ACT_DIAG_SW_MID_CURRENT:
+		case ACT_DIAG_SW_RANGE_CURRENT_1:
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
 			
-		case ACT_DIAG_SW_HIGH_CURRENT:
+		case ACT_DIAG_SW_RANGE_CURRENT_2:
+			GPIO_SetState(GPIO_FAN, true);
+			GPIO_SetState(GPIO_OUT_B0, false);
+			GPIO_SetState(GPIO_OUT_B1, true);
+			break;
+
+		case ACT_DIAG_SW_RANGE_CURRENT_3:
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
@@ -190,13 +196,13 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 
 		case ACT_DIAG_ENABLE_PULSE:
 			LL_PulseEnable(TRUE);
-			DELAY_US(100000);
+			DELAY_US(DataTable[REG_DEBUG_COMM]);
 			LL_PulseEnable(FALSE);
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:
 			LL_PulseStart(TRUE);
-			DELAY_US(100000);
+			DELAY_US(DataTable[REG_DEBUG_COMM]);
 			LL_PulseStart(FALSE);
 			break;
 
@@ -221,7 +227,7 @@ void CONTROL_ApplyParameters()
 	{
 		LL_SetGateVoltage(GateV);
 		LOGIC_SetOutCurrent(LOGIC_SetCurrentRange(Current));
-		LOGIC_TimePulse(DataTable[REG_VRATE_SETPOINT]);
+		LOGIC_TimePulse(VoltageRate);
 
 		CONTROL_SetDeviceState(DS_InProcess, SDS_ConfigReady);
 	}
@@ -238,7 +244,6 @@ void CONTROL_PrepareStart(Boolean StartTest)
 		UsedSync = StartTest;
 		LOGIC_BatteryCharge(FALSE);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_Config);
-
 	 }
 	else
 		DataTable[REG_WARNING] = WARNING_BAD_CONFIG;
@@ -273,5 +278,3 @@ void CONTROL_ResetToDefaults(bool StopPowerSupply)
 	CONTROL_FillDefault();
 }
 //-----------------------------
-//-----------------------------
-
