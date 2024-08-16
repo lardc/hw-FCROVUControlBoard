@@ -176,6 +176,7 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_PostPulseCharg && (CONTROL_TimeCounter >= AfterPulseTimeout))
 	{
+		CONTROL_BatteryChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_FULL];
 		LOGIC_BatteryCharge(true);
 		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
 	}

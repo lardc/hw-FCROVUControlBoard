@@ -30,6 +30,7 @@ typedef enum __DeviceSubState
 
 // Variables
 extern volatile Int64U CONTROL_TimeCounter;
+volatile Int64U CONTROL_BatteryChargeTimeCounter;
 extern volatile DeviceState CONTROL_State;
 extern volatile DeviceSubState CONTROL_SubState;
 extern volatile Boolean UsedSync;

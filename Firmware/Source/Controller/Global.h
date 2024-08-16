@@ -16,19 +16,16 @@
 #define ANALOG_REF_MV					3300	// (in mV)
 #define ADC_DAC_RESOLUTION				4095
 
-// Fine tuning
-#define CAP_V_CONV						0.265f
-
 // Gate voltage settings
 #define GATE_ANALOG_GAIN				1.42f
 
-// Задержки в процессе тестирования (в мс)
+// Задержки в процессе тестирования
 #define SWITCH_TIME_US					20			// Задержка включения реле
 #define SYNC_TIMEOUT_US					5000		// Таймаут синхронизации после конфигурации ячеек
-#define DOP_TIME_US						100			// Длительность полки
+#define DOP_TIME_US						50			// Длительность полки
 #define FALL_TIME_US					20			// Длительность заднего фронта
-#define WIDTH_SYNC_LINE_MAX				500			// Максимальная длительность импульса синхронизации, мс
-#define AFTER_PULSE_TIMEOUT				500			// (in ms)
+#define WIDTH_SYNC_LINE_MAX				100			// Максимальная длительность импульса синхронизации, мкс
+#define AFTER_PULSE_TIMEOUT				500			// Задержка после формирования
 
 // Данные для задания параметров формирования
 #define CH_CURRENT						400			// Ток формирующий при КЗ на 1 силовой плате, А

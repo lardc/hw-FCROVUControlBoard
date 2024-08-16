@@ -17,7 +17,7 @@
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
-Int64U CONTROL_BatteryChargeTimeCounter = 0;
+volatile Int64U CONTROL_BatteryChargeTimeCounter = 0;
 Int16U VoltageRate, Current = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
@@ -230,6 +230,11 @@ void CONTROL_ApplyParameters()
 		LOGIC_TimePulse(VoltageRate);
 
 		CONTROL_SetDeviceState(DS_InProcess, SDS_ConfigReady);
+	}
+	else
+	{
+		CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		DataTable[REG_WARNING] = WARNING_BAD_CONFIG;
 	}
 }
 

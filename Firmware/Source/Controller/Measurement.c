@@ -40,7 +40,6 @@ float MEASURE_ConvertADCtoV(float RawInput)
 	float K = DataTable[REG_PS_VOLTAGE_K] / 1000;
 
 	Result = ((float)RawInput - Offset) * ANALOG_REF_MV / ADC_DAC_RESOLUTION * K;
-	//float Voltage = (RawInput / ADC_DAC_RESOLUTION * ANALOG_REF_MV) * CAP_V_CONV;
 	return (Result > 0) ? Result : 0;
 }
 //-----------------------------------------------

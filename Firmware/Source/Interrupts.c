@@ -22,9 +22,10 @@ Int64U SyncLineTimeCounter = 0;
 //
 void EXTI9_5_IRQHandler()
 {
-	if(CONTROL_SubState == SDS_WaitSync && GPIO_GetState(GPIO_SYNC_IN))
+	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
 			LL_PanelLamp(true);
+			LL_Led2(true);
 			TIM_Start(TIM7);
 			SyncLineTimeCounter = CONTROL_TimeCounter + WIDTH_SYNC_LINE_MAX;
 			CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
