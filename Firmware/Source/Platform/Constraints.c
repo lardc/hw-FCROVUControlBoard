@@ -13,8 +13,8 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{0, INT16U_MAX, 0},															// 1
 		{0, 0, 0},																	// 2
 		{TIMECHRAGE_MIN, TIMECHRAGE_MAX, TIMECHRAGE_DEF},							// 3
-		{VCHRAGE_MIN, VCHRAGE_MAX ,VCHRAGE_DEF},									// 4
-		{0, 0, 0},																	// 5
+		{TIMECHRAGE_MIN, TIMECHRAGE_MAX, TIMECHRAGE_DEF},							// 4
+		{VCHRAGE_MIN, VCHRAGE_MAX ,VCHRAGE_DEF},									// 5
 		{0, 0, 0},																	// 6
 		{0, 0, 0},																	// 7
 		{0, 0, 0},																	// 8

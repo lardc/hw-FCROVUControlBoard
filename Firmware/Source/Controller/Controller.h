@@ -21,7 +21,7 @@ typedef enum __DeviceSubState
 	SDS_FirstCharg,
 	SDS_Config,
 	SDS_ConfigReady,
-	SDS_Mensure,
+	SDS_Meansure,
 	SDS_WaitSync,
 	SDS_RiseEdgeDetected,
 	SDS_FallEdge,
@@ -30,7 +30,7 @@ typedef enum __DeviceSubState
 
 // Variables
 extern volatile Int64U CONTROL_TimeCounter;
-volatile Int64U CONTROL_BatteryChargeTimeCounter;
+volatile Int64U CONTROL_BatteryFirstChargeTimeCounter, CONTROL_BatteryPostPulseChargeTimeCounter;
 extern volatile DeviceState CONTROL_State;
 extern volatile DeviceSubState CONTROL_SubState;
 extern volatile Boolean UsedSync;

@@ -35,7 +35,7 @@
 #define CURRENT_SET_DEF				400
 
 // Время Timeout заряда батареи (мкс)
-#define TIMECHRAGE_MIN				1000
+#define TIMECHRAGE_MIN				100
 #define TIMECHRAGE_MAX				50000
 #define TIMECHRAGE_DEF				5000
 

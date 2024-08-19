@@ -17,7 +17,7 @@
 
 // Variables
 volatile Int64U CONTROL_TimeCounter = 0;
-volatile Int64U CONTROL_BatteryChargeTimeCounter = 0;
+volatile Int64U CONTROL_BatteryFirstChargeTimeCounter, CONTROL_BatteryPostPulseChargeTimeCounter = 0;
 Int16U VoltageRate, Current = 0;
 volatile DeviceState CONTROL_State = DS_None;
 volatile DeviceSubState CONTROL_SubState = SDS_None;
@@ -98,8 +98,8 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 		case ACT_ENABLE_POWER:
 			if(CONTROL_State == DS_None)
 			{
-				CONTROL_BatteryChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_FULL];
-				CONTROL_SetDeviceState(DS_BatteryCharging, SDS_None);
+				CONTROL_BatteryFirstChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_FULL];
+				CONTROL_SetDeviceState(DS_BatteryCharging, SDS_FirstCharg);
 				LOGIC_BatteryCharge(true);
 				LL_SetGateVoltage(0);
 			}
@@ -268,7 +268,8 @@ void CONTROL_HandleBatteryCharge()
 		}
 		else
 		{
-			if (CONTROL_TimeCounter > CONTROL_BatteryChargeTimeCounter)
+			if ((CONTROL_TimeCounter > CONTROL_BatteryFirstChargeTimeCounter && CONTROL_SubState == SDS_FirstCharg) ||
+					(CONTROL_TimeCounter > CONTROL_BatteryPostPulseChargeTimeCounter && CONTROL_SubState == SDS_PostPulseCharg))
 				CONTROL_SwitchToFault(DF_BATTERY);
 		}
 	}

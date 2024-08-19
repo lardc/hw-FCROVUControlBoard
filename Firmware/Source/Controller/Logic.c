@@ -114,7 +114,7 @@ void LOGIC_TimePulse(Int16U VRate)
 
 void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 {
-	CONTROL_SetDeviceState(DS_InProcess, SDS_Mensure);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_Meansure);
 }
 
 // ----------------------------
@@ -154,7 +154,7 @@ void LOGIC_Update()
 		else
 			LOGIC_ApplyParameters(CONTROL_TimeCounter);
 	}
-	if(CONTROL_SubState == SDS_Mensure)
+	if(CONTROL_SubState == SDS_Meansure)
 	{
 		LL_PanelLamp(true);
 		LL_Led2(true);
@@ -176,7 +176,7 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_PostPulseCharg && (CONTROL_TimeCounter >= AfterPulseTimeout))
 	{
-		CONTROL_BatteryChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_FULL];
+		CONTROL_BatteryPostPulseChargeTimeCounter = CONTROL_TimeCounter + DataTable[REG_CHRAGE_TIMEOUT_PULSE];
 		LOGIC_BatteryCharge(true);
 		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
 	}
