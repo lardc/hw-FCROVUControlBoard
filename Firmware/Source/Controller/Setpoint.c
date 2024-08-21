@@ -12,7 +12,7 @@
 #include "Controller.h"
 
 // Definitions
-#define SETPOINT_ARRAY_SIZE		7
+#define SETPOINT_ARRAY_SIZE		5
 
 // Forward functions
 Boolean SP_Generate(Int16U VRate, pInt16U GateV);

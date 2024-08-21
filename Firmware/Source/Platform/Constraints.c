@@ -39,10 +39,10 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 27
 		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 28
 		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 29
-		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 30
-		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 31
-		{GATEV_POINT_MIN, GATEV_POINT_MAX, GATEV_POINT_DEF},						// 32
-		{VRATE_POINT_MIN, VRATE_POINT_MAX, VRATE_POINT_DEF},						// 33
+		{0, 0, 0},																	// 30
+		{0, 0, 0},																	// 31
+		{0, 0, 0},																	// 32
+		{0, 0, 0},																	// 33
 		{0, 0, 0},																	// 34
 		{0, 0, 0},																	// 35
 		{0, 0, 0},																	// 36
