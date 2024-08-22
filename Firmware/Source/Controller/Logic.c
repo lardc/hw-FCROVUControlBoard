@@ -54,7 +54,7 @@ if (State)
 
 Int16U LOGIC_SetCurrentRange(Int16U Current)
 {
-	CurrentRange = (Current / CH_CURRENT) + 1;
+	CurrentRange = (Current / CH_CURRENT);
 	return (CurrentRange > CH_MAX) ? CH_MAX : CurrentRange;
 }
 
@@ -68,6 +68,7 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
+			break;
 		}
 		break;
 
@@ -76,6 +77,7 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
+			break;
 		}
 		break;
 
@@ -84,6 +86,7 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, true);
+			break;
 		}
 		break;
 
@@ -92,6 +95,7 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
+			break;
 		}
 		break;
 
@@ -100,6 +104,7 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 			GPIO_SetState(GPIO_FAN, false);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
+			break;
 		}
 		break;
 		}
