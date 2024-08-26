@@ -72,6 +72,9 @@ void IO_Config()
 	GPIO_InitPushPullOutput(GPIO_LED1);
 	GPIO_InitPushPullOutput(GPIO_LED2);
 
+	// Выставление уровня выхода
+	GPIO_SetState(GPIO_PS_BOARD,true);
+
 	// Альтернативные функции портов
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);

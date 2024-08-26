@@ -5,25 +5,33 @@
 #include "Board.h"
 #include "Global.h"
 #include "SysConfig.h"
+#include "Logic.h"
+#include "DeviceObjectDictionary.h"
+#include "DataTable.h"
+
+// Functions prototypes
+//
+void INT_NOExtSyncControl();
+void INT_SyncWidthControl();
+
+// Variables
+//
+Int64U SyncLineTimeCounter = 0;
 
 // Functions
 //
-void EXTI0_IRQHandler()
+void EXTI9_5_IRQHandler()
 {
-	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
+	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
-		LL_PanelLamp(true);
-		TIM_Start(TIM7);
-
-		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
-	}
-	else
-	{
-		if(GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_RiseEdgeDetected)
-			AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
+			LL_PanelLamp(true);
+			LL_Led2(true);
+			TIM_Start(TIM7);
+			SyncLineTimeCounter = CONTROL_TimeCounter + WIDTH_SYNC_LINE_MAX;
+			CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 	}
 
-	EXTI_FlagReset(EXTI_0);
+	EXTI_FlagReset(EXTI_5);
 }
 //-----------------------------------------
 
@@ -51,6 +59,7 @@ void TIM3_IRQHandler()
 {
 	static uint16_t CounterTmp = 0, CounterLed = 0;
 
+
 	if(TIM_StatusCheck(TIM3))
 	{
 		if(++CounterTmp >= (1000 / TIMER3_uS))
@@ -64,8 +73,12 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		
-		CONTROL_AfterPulseProcess();
+		if(CONTROL_State == DS_InProcess)
+		{
+			LOGIC_Update();
+			INT_NOExtSyncControl();
+			INT_SyncWidthControl();
+		}
 		TIM_StatusClear(TIM3);
 	}
 }
@@ -77,6 +90,35 @@ void TIM7_IRQHandler()
 	{
 		TIM_Stop(TIM7);
 		TIM_StatusClear(TIM7);
+	}
+}
+//-----------------------------------------
+
+void INT_NOExtSyncControl()
+{
+	if(SyncStartTimeout && (CONTROL_TimeCounter >= SyncStartTimeout))
+	{
+		LOGIC_ResetHWToDefaults(FALSE);
+		DataTable[REG_WARNING] = WARNING_NO_SYNC;
+		CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		LL_PanelLamp(false);
+		LL_Led2(false);
+		SyncStartTimeout = 0;
+	}
+}
+//-----------------------------------------
+
+void INT_SyncWidthControl()
+{
+	if(SyncLineTimeCounter && (CONTROL_TimeCounter >= SyncLineTimeCounter))
+	{
+		LOGIC_ResetHWToDefaults(FALSE);
+		DataTable[REG_WARNING] = WARNING_SYNC_TIMEOUT;
+		CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		LL_PanelLamp(false);
+		LL_Led2(false);
+		SyncLineTimeCounter = 0;
+		SyncStartTimeout = 0;
 	}
 }
 //-----------------------------------------

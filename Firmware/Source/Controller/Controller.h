@@ -7,24 +7,33 @@
 // Types
 typedef enum __DeviceState
 {
-	DS_None			= 0,
-	DS_Fault		= 1,
-	DS_Disabled		= 2,
-	DS_Powered		= 3
+	DS_None	= 0,
+	DS_Fault,
+	DS_Disabled,
+	DS_BatteryCharging,
+	DS_Ready,
+	DS_InProcess
 } DeviceState;
 
 typedef enum __DeviceSubState
 {
-	SDS_None				= 0,
-	SDS_WaitSync			= 1,
-	SDS_RiseEdgeDetected 	= 2
+	SDS_None = 0,
+	SDS_FirstCharg,
+	SDS_Config,
+	SDS_ConfigReady,
+	SDS_Meansure,
+	SDS_WaitSync,
+	SDS_RiseEdgeDetected,
+	SDS_FallEdge,
+	SDS_PostPulseCharg
 } DeviceSubState;
 
 // Variables
-extern volatile Int64U CONTROL_TimeCounter, AfterPulseTimeout;
+extern volatile Int64U CONTROL_TimeCounter;
+volatile Int64U CONTROL_BatteryFirstChargeTimeCounter, CONTROL_BatteryPostPulseChargeTimeCounter;
 extern volatile DeviceState CONTROL_State;
 extern volatile DeviceSubState CONTROL_SubState;
-
+extern volatile Boolean UsedSync;
 // Functions
 // Initialize controller
 void CONTROL_Init();
@@ -32,7 +41,7 @@ void CONTROL_Init();
 void CONTROL_Idle();
 // Set device state
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
-// After pulse process
-void CONTROL_AfterPulseProcess();
+//
+void CONTROL_ApplyParameters();
 
 #endif // CONTROLLER_H_
