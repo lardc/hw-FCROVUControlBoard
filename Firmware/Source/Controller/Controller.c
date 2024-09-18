@@ -195,9 +195,10 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_DIAG_ENABLE_PULSE:
-			LL_PulseEnable(TRUE);
-			DELAY_US(DataTable[REG_DEBUG_COMM]);
-			LL_PulseEnable(FALSE);
+			if (DataTable[REG_DEBUG_COMM])
+				LL_PulseEnable(TRUE);
+			else
+				LL_PulseEnable(FALSE);
 			break;
 
 		case ACT_DIAG_MANUAL_PULSE:

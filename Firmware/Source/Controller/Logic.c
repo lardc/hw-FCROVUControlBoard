@@ -112,6 +112,8 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 void LOGIC_TimePulse(Int16U VRate)
 {
 	TimePulse = DataTable[REG_BAT_VOLTAGE] / VRate + DOP_TIME_US;
+	if (TimePulse > WIDTH_SYNC_LINE_MAX)
+		TimePulse = WIDTH_SYNC_LINE_MAX;
 	return;
 }
 
