@@ -151,25 +151,21 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 			
 		case ACT_DIAG_SW_RANGE_CURRENT_0:
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
 			
 		case ACT_DIAG_SW_RANGE_CURRENT_1:
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
 			
 		case ACT_DIAG_SW_RANGE_CURRENT_2:
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, true);
 			break;
 
 		case ACT_DIAG_SW_RANGE_CURRENT_3:
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
 			break;
@@ -180,11 +176,11 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			LL_PanelLamp(FALSE);
 			break;
 
-		//case ACT_DIAG_SW_FAN:
-		//	LL_Fan(TRUE);
-		//	DELAY_US(DataTable[REG_DEBUG_COMM]);
-		//	LL_Fan(FALSE);
-		//	break;
+		case ACT_DIAG_SW_FAN:
+			LL_Fan(TRUE);
+			DELAY_US(DataTable[REG_DEBUG_COMM]);
+			LL_Fan(FALSE);
+			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:
 			LL_SWBoard(DataTable[REG_DEBUG_COMM]);

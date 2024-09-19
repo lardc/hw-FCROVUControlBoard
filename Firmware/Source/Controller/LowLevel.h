@@ -7,7 +7,6 @@
 // Functions
 //
 void LL_ToggleLed();
-void LL_Led2(bool State);
 void LL_PanelLamp(bool State);
 void LL_PulseEnable(bool State);
 void LL_PulseStart(bool State);

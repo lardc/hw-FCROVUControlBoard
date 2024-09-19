@@ -47,7 +47,7 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_PS_BOARD);
 	GPIO_InitPushPullOutput(GPIO_SW_BOARD);
 	GPIO_InitPushPullOutput(GPIO_LED1);
-	GPIO_InitPushPullOutput(GPIO_LED2);
+	GPIO_InitPushPullOutput(GPIO_PULSE_EN2);
 	
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);

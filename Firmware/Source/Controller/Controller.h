@@ -9,9 +9,11 @@ typedef enum __DeviceState
 {
 	DS_None	= 0,
 	DS_Fault,
-	DS_BatteryCharging,
+	DS_Disabled,
 	DS_Ready,
-	DS_InProcess
+	DS_ConfigReady,
+	DS_InProcess,
+	DS_BatteryCharging
 } DeviceState;
 
 typedef enum __DeviceSubState

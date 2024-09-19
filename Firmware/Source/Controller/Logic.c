@@ -25,7 +25,6 @@ void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 {
 	LL_PulseEnable(false);
 	LL_SetGateVoltage(0);
-	GPIO_SetState(GPIO_FAN, false);
 	GPIO_SetState(GPIO_OUT_B0, false);
 	GPIO_SetState(GPIO_OUT_B1, false);
 
@@ -65,7 +64,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 	{
 		case CURRENT_RANGE_0:
 		{
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
@@ -74,7 +72,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 
 		case CURRENT_RANGE_1:
 		{
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
@@ -83,7 +80,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 
 		case CURRENT_RANGE_2:
 		{
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, true);
 			break;
@@ -92,7 +88,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 
 		case CURRENT_RANGE_3:
 		{
-			GPIO_SetState(GPIO_FAN, true);
 			GPIO_SetState(GPIO_OUT_B0, true);
 			GPIO_SetState(GPIO_OUT_B1, true);
 			break;
@@ -101,7 +96,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 
 		default:
 		{
-			GPIO_SetState(GPIO_FAN, false);
 			GPIO_SetState(GPIO_OUT_B0, false);
 			GPIO_SetState(GPIO_OUT_B1, false);
 			break;
@@ -128,7 +122,7 @@ void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 {
-	CONTROL_SetDeviceState(DS_InProcess, SDS_WaitSync);
+	CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
 	LL_PulseEnable(true);
 	SyncStartTimeout = CONTROL_TimeCounter + SYNC_TIMEOUT_US;
 	return;
@@ -164,7 +158,6 @@ void LOGIC_Update()
 	if(CONTROL_SubState == SDS_Meansure)
 	{
 		LL_PanelLamp(true);
-		LL_Led2(true);
 		LOGIC_TestSequence();
 		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
 	}
@@ -177,7 +170,6 @@ void LOGIC_Update()
 	{
 		LL_PulseEnable(false);
 		LL_PanelLamp(false);
-		LL_Led2(false);
 		LOGIC_ResetHWToDefaults(false);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 	}

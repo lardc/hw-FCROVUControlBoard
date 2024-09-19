@@ -17,12 +17,6 @@ void LL_ToggleLed()
 }
 //-----------------------------
 
-void LL_Led2(bool State)
-{
-	GPIO_SetState(GPIO_LED2, State);
-}
-//-----------------------------
-
 void LL_PanelLamp(bool State)
 {
 	GPIO_SetState(GPIO_LAMP, State);
@@ -32,6 +26,7 @@ void LL_PanelLamp(bool State)
 void LL_PulseEnable(bool State)
 {
 	GPIO_SetState(GPIO_PULSE_EN, !State);
+	GPIO_SetState(GPIO_PULSE_EN2, State);
 }
 //-----------------------------
 
@@ -41,10 +36,10 @@ void LL_PulseStart(bool State)
 }
 //-----------------------------
 
-//void LL_Fan(bool State)
-//{
-//	GPIO_SetState(GPIO_FAN, State);
-//}
+void LL_Fan(bool State)
+{
+	GPIO_SetState(GPIO_FAN, State);
+}
 //-----------------------------
 
 void LL_PSBoard(bool State)

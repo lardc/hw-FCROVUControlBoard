@@ -32,7 +32,7 @@ GPIO_PortPinSettingMacro GPIO_LAMP	 	 	= {GPIOB, Pin_3};
 GPIO_PortPinSettingMacro GPIO_PS_BOARD 	 	= {GPIOB, Pin_4};
 GPIO_PortPinSettingMacro GPIO_SW_BOARD 	 	= {GPIOB, Pin_5};
 GPIO_PortPinSettingMacro GPIO_LED1	 	 	= {GPIOB, Pin_7};
-GPIO_PortPinSettingMacro GPIO_LED2	 	 	= {GPIOB, Pin_6};
+GPIO_PortPinSettingMacro GPIO_PULSE_EN2		= {GPIOB, Pin_6};
 
 // Определения для портов альтернативных функций
 GPIO_PortPinSettingMacro GPIO_ALT_UART1_TX	= {GPIOA, Pin_9};

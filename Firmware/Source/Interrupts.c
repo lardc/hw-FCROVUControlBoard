@@ -25,7 +25,6 @@ void EXTI9_5_IRQHandler()
 	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
 			LL_PanelLamp(true);
-			LL_Led2(true);
 			TIM_Start(TIM7);
 			SyncLineTimeCounter = CONTROL_TimeCounter + WIDTH_SYNC_LINE_MAX;
 			CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
@@ -73,7 +72,7 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		if(CONTROL_State == DS_InProcess)
+		if(CONTROL_State == DS_InProcess || CONTROL_State == DS_ConfigReady)
 		{
 			LOGIC_Update();
 			INT_NOExtSyncControl();
@@ -102,7 +101,6 @@ void INT_NOExtSyncControl()
 		DataTable[REG_WARNING] = WARNING_NO_SYNC;
 		CONTROL_SetDeviceState(DS_Ready, SDS_None);
 		LL_PanelLamp(false);
-		LL_Led2(false);
 		SyncStartTimeout = 0;
 	}
 }
@@ -116,7 +114,6 @@ void INT_SyncWidthControl()
 		DataTable[REG_WARNING] = WARNING_SYNC_TIMEOUT;
 		CONTROL_SetDeviceState(DS_Ready, SDS_None);
 		LL_PanelLamp(false);
-		LL_Led2(false);
 		SyncLineTimeCounter = 0;
 		SyncStartTimeout = 0;
 	}

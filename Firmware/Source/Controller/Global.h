@@ -22,7 +22,7 @@
 // Задержки в процессе тестирования
 #define SWITCH_TIME_US					20			// Задержка включения реле
 #define SYNC_TIMEOUT_US					5000		// Таймаут синхронизации после конфигурации ячеек
-#define DOP_TIME_US						50			// Длительность полки
+#define DOP_TIME_US						10			// Длительность полки
 #define FALL_TIME_US					20			// Длительность заднего фронта
 #define WIDTH_SYNC_LINE_MAX				30			// Максимальная длительность импульса синхронизации, мкс
 #define AFTER_PULSE_TIMEOUT				500			// Задержка после формирования
