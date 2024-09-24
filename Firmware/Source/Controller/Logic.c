@@ -13,11 +13,16 @@
 #include "Delay.h"
 #include "Controller.h"
 
+// Definitions
+//
+#define EXT_LAMP_ON_STATE_TIME		500					// Время работы внешнего индикатора, мс
+
 // Varibales
 //
 volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
 static Int64U TimePulse;
 Int16U CurrentRange = 0;
+
 // Functions
 //
 // Сброс аппаратных линий в состояния по умолчанию
@@ -139,6 +144,7 @@ void LOGIC_TestSequence()
 }
 
 //-----------------------------
+
 void LOGIC_HandleFan(bool Pulse)
 {
 	static uint64_t FanOnTimeout = 0;
@@ -168,6 +174,28 @@ void LOGIC_HandleFan(bool Pulse)
 			LL_Fan(false);
 	}
 }
+
+//-----------------------------
+
+void LOGIC_HandlePanelLamp(bool Pulse)
+{
+	static Int64U PanelLampTimeout = 0;
+
+	if(CONTROL_State != DS_None)
+	{
+		if(Pulse)
+		{
+			LL_PanelLamp(true);
+			PanelLampTimeout = CONTROL_TimeCounter + EXT_LAMP_ON_STATE_TIME;
+		}
+		else
+		{
+			if(CONTROL_TimeCounter >= PanelLampTimeout)
+				LL_PanelLamp(true);
+		}
+	}
+}
+
 //-----------------------------
 
 void LOGIC_Update()
@@ -188,7 +216,7 @@ void LOGIC_Update()
 	if(CONTROL_SubState == SDS_Meansure)
 	{
 		LOGIC_HandleFan(true);
-		LL_PanelLamp(true);
+		LOGIC_HandlePanelLamp(true);
 		LOGIC_TestSequence();
 		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
 	}

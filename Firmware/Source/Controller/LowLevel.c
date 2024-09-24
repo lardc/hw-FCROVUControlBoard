@@ -19,7 +19,7 @@ void LL_ToggleLed()
 
 void LL_PanelLamp(bool State)
 {
-	GPIO_SetState(GPIO_LAMP, State);
+	GPIO_SetState(GPIO_LAMP, !State);
 }
 //-----------------------------
 
