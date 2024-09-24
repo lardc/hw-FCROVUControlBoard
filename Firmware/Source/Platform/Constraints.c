@@ -15,8 +15,8 @@ const TableItemConstraint Constraint[DATA_TABLE_WP_START] = {
 		{TIMECHRAGE_MIN, TIMECHRAGE_MAX, TIMECHRAGE_DEF},							// 3
 		{TIMECHRAGE_MIN, TIMECHRAGE_MAX, TIMECHRAGE_DEF},							// 4
 		{VCHRAGE_MIN, VCHRAGE_MAX ,VCHRAGE_DEF},									// 5
-		{0, 0, 0},																	// 6
-		{0, 0, 0},																	// 7
+		{NO, YES, YES},																// 6
+		{0, INT16U_MAX, 0},															// 7
 		{0, 0, 0},																	// 8
 		{0, 0, 0},																	// 9
 		{0, 0, 0},																	// 10

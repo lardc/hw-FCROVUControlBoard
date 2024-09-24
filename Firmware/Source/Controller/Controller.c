@@ -177,9 +177,7 @@ static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError)
 			break;
 
 		case ACT_DIAG_SW_FAN:
-			LL_Fan(TRUE);
-			DELAY_US(DataTable[REG_DEBUG_COMM]);
-			LL_Fan(FALSE);
+			LL_Fan(DataTable[REG_DEBUG_COMM]);
 			break;
 			
 		case ACT_DIAG_SW_DRCUSWBOARD:

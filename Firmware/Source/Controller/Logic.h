@@ -22,6 +22,7 @@ void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter);
 Int16U LOGIC_SetCurrentRange(Int16U Current);
 void LOGIC_SetOutCurrent(Int16U CurrentRange);
 void LOGIC_TimePulse(Int16U VRate);
+void LOGIC_HandleFan(bool Pulse);
 void LOGIC_Update();
 
 #endif //__LOGIC_H/

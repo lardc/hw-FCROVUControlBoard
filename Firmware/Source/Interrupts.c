@@ -24,6 +24,7 @@ void EXTI9_5_IRQHandler()
 {
 	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
+			LOGIC_HandleFan(true);
 			LL_PanelLamp(true);
 			TIM_Start(TIM7);
 			SyncLineTimeCounter = CONTROL_TimeCounter + WIDTH_SYNC_LINE_MAX;
@@ -72,6 +73,8 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
+		LOGIC_HandleFan(false);
+
 		if(CONTROL_State == DS_InProcess || CONTROL_State == DS_ConfigReady)
 		{
 			LOGIC_Update();

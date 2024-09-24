@@ -18,7 +18,7 @@
 #define ACT_DIAG_SW_RANGE_CURRENT_2	123	// Выбрать 2 диапазон тока
 #define ACT_DIAG_SW_RANGE_CURRENT_3	124	// Выбрать 3 диапазон тока
 #define ACT_DIAG_SW_LAMP			125	// Управление лампой на передней панели
-//#define ACT_DIAG_SW_FAN			126	// Управление вентилятором
+#define ACT_DIAG_SW_FAN				126	// Управление вентилятором
 #define ACT_DIAG_SW_DRCUSWBOARD		127	// Управление ЭМ DRCUSwitchBoard
 #define ACT_DIAG_SW_ATUPSBOARD		128	// Управление ЭМ ATUPSBoard
 #define ACT_DIAG_ENABLE_PULSE		129	// Разрешение входа запуска импульса
@@ -39,6 +39,9 @@
 #define REG_CHRAGE_TIMEOUT_FULL		3 	// Таймаут полного заряда батареи,мс
 #define REG_CHRAGE_TIMEOUT_PULSE	4	// Таймаут заряда батареи после формирования,мс
 #define	REG_BAT_VOLTAGE_THRESHOLD	5	// Минимальный порог заряда батареи, В *10
+#define REG_FAN_CTRL				6	// Разрешение работы вентиляторов
+#define REG_FAN_TIME				7	// Время работы вентилятора,c
+
 // 5 - 19
 #define REG_SETPOINT_GATEV1			20	// Затворное напряжение, точка 1 (в мВ)
 #define REG_SETPOINT_VRATE1			21	// Скорость нарастания напряжения, точка 1 (в В/мкс x10)

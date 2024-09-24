@@ -139,6 +139,36 @@ void LOGIC_TestSequence()
 }
 
 //-----------------------------
+void LOGIC_HandleFan(bool Pulse)
+{
+	static uint64_t FanOnTimeout = 0;
+
+	if(CONTROL_State != DS_None)
+	{
+		if(DataTable[REG_FAN_CTRL])
+		{
+			// Включение вентилятора
+			if (Pulse)
+			{
+				FanOnTimeout = CONTROL_TimeCounter + ((uint32_t)DataTable[REG_FAN_TIME] * 1000);
+				LL_Fan(true);
+			}
+
+			// Отключение вентилятора
+			else
+			{
+				if (FanOnTimeout && (CONTROL_TimeCounter > FanOnTimeout))
+				{
+					FanOnTimeout = 0;
+					LL_Fan(false);
+				}
+			}
+		}
+		else
+			LL_Fan(false);
+	}
+}
+//-----------------------------
 
 void LOGIC_Update()
 {
@@ -157,6 +187,7 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_Meansure)
 	{
+		LOGIC_HandleFan(true);
 		LL_PanelLamp(true);
 		LOGIC_TestSequence();
 		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
