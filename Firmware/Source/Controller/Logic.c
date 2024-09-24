@@ -173,6 +173,8 @@ void LOGIC_HandleFan(bool Pulse)
 		else
 			LL_Fan(false);
 	}
+	else
+		LL_Fan(false);
 }
 
 //-----------------------------
