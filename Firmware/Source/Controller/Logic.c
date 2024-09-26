@@ -12,6 +12,7 @@
 #include "Board.h"
 #include "Delay.h"
 #include "Controller.h"
+#include "Measurement.h"
 
 // Definitions
 //
@@ -20,6 +21,7 @@
 // Varibales
 //
 volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
+static Int64U PanelLampTimeout = 0;
 static Int64U TimePulse;
 Int16U CurrentRange = 0;
 
@@ -32,6 +34,8 @@ void LOGIC_ResetHWToDefaults(bool StopPowerSupply)
 	LL_SetGateVoltage(0);
 	GPIO_SetState(GPIO_OUT_B0, false);
 	GPIO_SetState(GPIO_OUT_B1, false);
+	LOGIC_HandlePanelLamp(false);
+	SyncStartTimeout = 0;
 
 	if (StopPowerSupply)
 			LOGIC_BatteryCharge(false);
@@ -118,7 +122,7 @@ void LOGIC_TimePulse(Int16U VRate)
 
 //-----------------------------
 
-void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
+void LOGIC_BeginTest()
 {
 	CONTROL_SetDeviceState(DS_InProcess, SDS_Meansure);
 }
@@ -127,10 +131,9 @@ void LOGIC_BeginTest(Int64U CONTROL_TimeCounter)
 
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 {
-	CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
 	LL_PulseEnable(true);
-	SyncStartTimeout = CONTROL_TimeCounter + SYNC_TIMEOUT_US;
-	return;
+	SyncStartTimeout = CONTROL_TimeCounter + SYNC_TIMEOUT_MS;
+	CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
 }
 
 // ----------------------------
@@ -181,8 +184,6 @@ void LOGIC_HandleFan(bool Pulse)
 
 void LOGIC_HandlePanelLamp(bool Pulse)
 {
-	static Int64U PanelLampTimeout = 0;
-
 	if(CONTROL_State != DS_None)
 	{
 		if(Pulse)
@@ -193,7 +194,35 @@ void LOGIC_HandlePanelLamp(bool Pulse)
 		else
 		{
 			if(CONTROL_TimeCounter >= PanelLampTimeout)
-				LL_PanelLamp(true);
+			{
+				LL_PanelLamp(false);
+				PanelLampTimeout = 0;
+ 			}
+		}
+	}
+}
+
+//-----------------------------
+
+void LOGIC_HandleBatteryCharge()
+{
+	if(CONTROL_State != DS_InProcess || CONTROL_State != DS_ConfigReady)
+	{
+		// Мониторинг уровня заряда батареи
+		float BatteryVoltage = MEASURE_GetBatteryVoltage();
+		DataTable[REG_BAT_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
+
+		if (CONTROL_State == DS_BatteryCharging)
+		{
+			if (DataTable[REG_BAT_VOLTAGE] >= DataTable[REG_BAT_VOLTAGE_THRESHOLD])
+				CONTROL_SetDeviceState(DS_Ready, SDS_None);
+
+			else
+			{
+				if ((CONTROL_TimeCounter > CONTROL_BatteryFirstChargeTimeCounter && CONTROL_SubState == SDS_FirstCharg) ||
+						(CONTROL_TimeCounter > CONTROL_BatteryPostPulseChargeTimeCounter && CONTROL_SubState == SDS_PostPulseCharg))
+					CONTROL_SwitchToFault(DF_BATTERY);
+			}
 		}
 	}
 }
@@ -206,12 +235,12 @@ void LOGIC_Update()
 	{
 		CONTROL_ApplyParameters();
 		LL_PulseEnable(true);
-		SwitchTime = CONTROL_TimeCounter + SWITCH_TIME_US;
+		SwitchTime = CONTROL_TimeCounter + SWITCH_TIME_MS;
 	}
 	if(CONTROL_SubState == SDS_ConfigReady && (CONTROL_TimeCounter >= SwitchTime))
 	{
 		if(UsedSync)
-			LOGIC_BeginTest(CONTROL_TimeCounter);
+			LOGIC_BeginTest();
 		else
 			LOGIC_ApplyParameters(CONTROL_TimeCounter);
 	}
@@ -219,8 +248,8 @@ void LOGIC_Update()
 	{
 		LOGIC_HandleFan(true);
 		LOGIC_HandlePanelLamp(true);
+		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_MS;
 		LOGIC_TestSequence();
-		FallEdgeTime = CONTROL_TimeCounter + FALL_TIME_US;
 	}
 	if(CONTROL_SubState == SDS_RiseEdgeDetected && !GPIO_GetState(GPIO_SYNC_IN))
 	{

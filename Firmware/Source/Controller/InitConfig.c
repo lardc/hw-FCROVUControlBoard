@@ -20,7 +20,9 @@ void INITCFG_ConfigEI()
 {
 	// Sync
 	EXTI_Config(EXTI_PA, EXTI_5, BOTH_TRIG, 0);
+	NVIC_SetPriority(EXTI9_5_IRQn, 25);// добавлено
 	EXTI_EnableInterrupt(EXTI9_5_IRQn, 0, true);
+
 }
 //------------------------------------------------------------------------------
 
@@ -60,13 +62,15 @@ void INITCFG_ConfigIO()
 void INITCFG_ConfigUART()
 {
 	USART_Init(USART1, SYSCLK, USART_BAUDRATE);
-	USART_Recieve_Interupt(USART1, 2, true);
+	USART_Recieve_Interupt(USART1, 44, true); // изменял на 44 c 2
 }
 //------------------------------------------------------------------------------
 
 void INITCFG_ConfigCAN()
 {
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
+	//NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, 30);  // добавлено
+	//NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 36); // добавлено
 	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
 	NCAN_FIFOInterrupt(TRUE);
 	NCAN_FilterInit(0, 0, 0);
@@ -86,6 +90,7 @@ void INITCFG_ConfigADC()
 	
 	ADC_ChannelSeqLen(ADC1, ADC_DMA_BUFF_SIZE);
 	ADC_DMAConfig(ADC1);
+	NVIC_SetPriority(ADC1_2_IRQn, 30);// добавлено
 	ADC_Enable(ADC1);
 }
 //------------------------------------------------------------------------------
@@ -100,6 +105,7 @@ void INITCFG_ConfigDMA()
 			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_EN, DMA_READ_FROM_PERIPH);
 	DMAChannelX_DataConfig(DMA_ADC_V_BAT_CHANNEL, (uint32_t)(&MEASURE_ADC_BatteryVoltageRaw[0]), (uint32_t)(&ADC1->DR),
 			ADC_DMA_BUFF_SIZE);
+	NVIC_SetPriority(DMA1_Channel1_IRQn, 62);// добавлено
 	DMA_ChannelEnable(DMA_ADC_V_BAT_CHANNEL, true);
 }
 //------------------------------------------------------------------------------
@@ -109,6 +115,7 @@ void INITCFG_ConfigTimer3()
 	TIM_Clock_En(TIM_3);
 	TIM_Config(TIM3, SYSCLK, TIMER3_uS);
 	TIM_Interupt(TIM3, 3, true);
+	//NVIC_SetPriority(TIM3_IRQn, 61);// добавлено
 	TIM_Start(TIM3);
 }
 //------------------------------------------------------------------------------
@@ -118,6 +125,7 @@ void INITCFG_ConfigTimer6()
 	TIM_Clock_En(TIM_6);
 	TIM_Config(TIM6, SYSCLK, TIMER6_uS);
 	TIM_MasterMode(TIM6, MMS_UPDATE);
+	//NVIC_SetPriority(TIM6_DAC_IRQn, 62);// добавлено
 	TIM_Start(TIM6);
 }
 //------------------------------------------------------------------------------
@@ -126,7 +134,9 @@ void INITCFG_ConfigTimer7()
 {
 	TIM_Clock_En(TIM_7);
 	TIM_Config(TIM7, SYSCLK, TIMER7_uS);
+	NVIC_SetPriority(TIM7_IRQn, 18);// добавлено
 	TIM_Interupt(TIM7, 1, true);
+	TIM_Reset(TIM7);
 }
 //------------------------------------------------------------------------------
 

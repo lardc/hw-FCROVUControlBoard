@@ -44,5 +44,7 @@ void CONTROL_Idle();
 void CONTROL_SetDeviceState(DeviceState NewState, DeviceSubState NewSubState);
 //
 void CONTROL_ApplyParameters();
-
+//
+void CONTROL_SwitchToFault(Int16U Reason);
+//
 #endif // CONTROLLER_H_

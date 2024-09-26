@@ -14,24 +14,24 @@
 void INT_NOExtSyncControl();
 void INT_SyncWidthControl();
 
-// Variables
-//
-Int64U SyncLineTimeCounter = 0;
-
 // Functions
 //
 void EXTI9_5_IRQHandler()
 {
+	LL_ToggleLed();
 	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
-			LOGIC_HandleFan(true);
-			LOGIC_HandlePanelLamp(true);
-			TIM_Start(TIM7);
-			SyncLineTimeCounter = CONTROL_TimeCounter + WIDTH_SYNC_LINE_MAX;
-			CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
+		//LOGIC_HandleFan(true);
+		//LOGIC_HandlePanelLamp(true);
+		//CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
+
+		//GPIO_SetState(GPIO_LED1, true);
+		TIM_Start(TIM7);
+		TIM_Stop(TIM3);
 	}
 
 	EXTI_FlagReset(EXTI_5);
+	LL_ToggleLed();
 }
 //-----------------------------------------
 
@@ -69,18 +69,18 @@ void TIM3_IRQHandler()
 			
 			if(++CounterLed >= LED_BLINK_TIME)
 			{
-				LL_ToggleLed();
+				//LL_ToggleLed();
 				CounterLed = 0;
 			}
 		}
+		LOGIC_HandleBatteryCharge();
 		LOGIC_HandleFan(false);
 		LOGIC_HandlePanelLamp(false);
+		INT_NOExtSyncControl();
 
-		if(CONTROL_State == DS_InProcess || CONTROL_State == DS_ConfigReady)
+		if(CONTROL_State == DS_InProcess)
 		{
 			LOGIC_Update();
-			INT_NOExtSyncControl();
-			INT_SyncWidthControl();
 		}
 		TIM_StatusClear(TIM3);
 	}
@@ -91,7 +91,11 @@ void TIM7_IRQHandler()
 {
 	if(TIM_StatusCheck(TIM7))
 	{
+		//GPIO_SetState(GPIO_LED1, false);
+		INT_SyncWidthControl();
 		TIM_Stop(TIM7);
+		TIM_Reset(TIM7);
+		TIM_Start(TIM3);
 		TIM_StatusClear(TIM7);
 	}
 }
@@ -104,7 +108,6 @@ void INT_NOExtSyncControl()
 		LOGIC_ResetHWToDefaults(FALSE);
 		DataTable[REG_WARNING] = WARNING_NO_SYNC;
 		CONTROL_SetDeviceState(DS_Ready, SDS_None);
-		LL_PanelLamp(false);
 		SyncStartTimeout = 0;
 	}
 }
@@ -112,14 +115,8 @@ void INT_NOExtSyncControl()
 
 void INT_SyncWidthControl()
 {
-	if(SyncLineTimeCounter && (CONTROL_TimeCounter >= SyncLineTimeCounter))
-	{
-		LOGIC_ResetHWToDefaults(FALSE);
-		DataTable[REG_WARNING] = WARNING_SYNC_TIMEOUT;
-		CONTROL_SetDeviceState(DS_Ready, SDS_None);
-		LL_PanelLamp(false);
-		SyncLineTimeCounter = 0;
-		SyncStartTimeout = 0;
-	}
+	LOGIC_ResetHWToDefaults(FALSE);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
+	//SyncStartTimeout = 0;
 }
 //-----------------------------------------

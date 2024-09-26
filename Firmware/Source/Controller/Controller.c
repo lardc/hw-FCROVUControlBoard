@@ -28,7 +28,6 @@ volatile Boolean UsedSync;
 void CONTROL_FillDefault();
 static Boolean CONTROL_DispatchAction(Int16U ActionID, pInt16U pUserError);
 void CONTROL_PrepareStart(Boolean StartTest);
-void CONTROL_HandleBatteryCharge();
 void CONTROL_ResetToDefaults(bool StopPowerSupply);
 
 
@@ -51,9 +50,6 @@ void CONTROL_Init()
 
 void CONTROL_Idle()
 {
-	// Process battery charge
-	CONTROL_HandleBatteryCharge();
-
 	DEVPROFILE_ProcessRequests();
 
 	// Ожидание запроса перехода в бутлоадер
@@ -249,28 +245,7 @@ void CONTROL_PrepareStart(Boolean StartTest)
 		DataTable[REG_WARNING] = WARNING_BAD_CONFIG;
 }
 //------------------------------
-void CONTROL_HandleBatteryCharge()
-{
-	// Мониторинг уровня заряда батареи
-	float BatteryVoltage = MEASURE_GetBatteryVoltage();
-	DataTable[REG_BAT_VOLTAGE] = (uint16_t)(BatteryVoltage * 10);
 
-	if (CONTROL_State == DS_BatteryCharging)
-	{
-		if (DataTable[REG_BAT_VOLTAGE] >= DataTable[REG_BAT_VOLTAGE_THRESHOLD])
-		{
-				CONTROL_SetDeviceState(DS_Ready, SDS_None);
-		}
-		else
-		{
-			if ((CONTROL_TimeCounter > CONTROL_BatteryFirstChargeTimeCounter && CONTROL_SubState == SDS_FirstCharg) ||
-					(CONTROL_TimeCounter > CONTROL_BatteryPostPulseChargeTimeCounter && CONTROL_SubState == SDS_PostPulseCharg))
-				CONTROL_SwitchToFault(DF_BATTERY);
-		}
-	}
-}
-
-//-----------------------------
 void CONTROL_ResetToDefaults(bool StopPowerSupply)
 {
 	LOGIC_ResetHWToDefaults(StopPowerSupply);
