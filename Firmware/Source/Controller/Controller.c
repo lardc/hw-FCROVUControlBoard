@@ -50,8 +50,8 @@ void CONTROL_Init()
 
 void CONTROL_Idle()
 {
+	// Process interface
 	DEVPROFILE_ProcessRequests();
-
 	// Ожидание запроса перехода в бутлоадер
 	if(BOOT_LOADER_VARIABLE != BOOT_LOADER_REQUEST)
 		IWDG_Refresh();

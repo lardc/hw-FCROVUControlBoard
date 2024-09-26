@@ -21,7 +21,6 @@
 // Varibales
 //
 volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
-static Int64U PanelLampTimeout = 0;
 static Int64U TimePulse;
 Int16U CurrentRange = 0;
 
@@ -132,6 +131,7 @@ void LOGIC_BeginTest()
 void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 {
 	LL_PulseEnable(true);
+	LOGIC_HandleFan(true);
 	SyncStartTimeout = CONTROL_TimeCounter + SYNC_TIMEOUT_MS;
 	CONTROL_SetDeviceState(DS_ConfigReady, SDS_WaitSync);
 }
@@ -184,6 +184,8 @@ void LOGIC_HandleFan(bool Pulse)
 
 void LOGIC_HandlePanelLamp(bool Pulse)
 {
+	static Int64U PanelLampTimeout = 0;
+
 	if(CONTROL_State != DS_None)
 	{
 		if(Pulse)
@@ -196,7 +198,6 @@ void LOGIC_HandlePanelLamp(bool Pulse)
 			if(CONTROL_TimeCounter >= PanelLampTimeout)
 			{
 				LL_PanelLamp(false);
-				PanelLampTimeout = 0;
  			}
 		}
 	}

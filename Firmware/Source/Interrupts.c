@@ -18,20 +18,13 @@ void INT_SyncWidthControl();
 //
 void EXTI9_5_IRQHandler()
 {
-	LL_ToggleLed();
 	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
-		//LOGIC_HandleFan(true);
-		//LOGIC_HandlePanelLamp(true);
-		//CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
-
-		//GPIO_SetState(GPIO_LED1, true);
+		LOGIC_HandlePanelLamp(true);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 		TIM_Start(TIM7);
-		TIM_Stop(TIM3);
 	}
-
 	EXTI_FlagReset(EXTI_5);
-	LL_ToggleLed();
 }
 //-----------------------------------------
 
@@ -59,7 +52,6 @@ void TIM3_IRQHandler()
 {
 	static uint16_t CounterTmp = 0, CounterLed = 0;
 
-
 	if(TIM_StatusCheck(TIM3))
 	{
 		if(++CounterTmp >= (1000 / TIMER3_uS))
@@ -69,7 +61,7 @@ void TIM3_IRQHandler()
 			
 			if(++CounterLed >= LED_BLINK_TIME)
 			{
-				//LL_ToggleLed();
+				LL_ToggleLed();
 				CounterLed = 0;
 			}
 		}
@@ -91,11 +83,9 @@ void TIM7_IRQHandler()
 {
 	if(TIM_StatusCheck(TIM7))
 	{
-		//GPIO_SetState(GPIO_LED1, false);
 		INT_SyncWidthControl();
 		TIM_Stop(TIM7);
 		TIM_Reset(TIM7);
-		TIM_Start(TIM3);
 		TIM_StatusClear(TIM7);
 	}
 }
@@ -117,6 +107,5 @@ void INT_SyncWidthControl()
 {
 	LOGIC_ResetHWToDefaults(FALSE);
 	CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
-	//SyncStartTimeout = 0;
 }
 //-----------------------------------------
