@@ -85,8 +85,7 @@
 //
 #define WARNING_NONE				0
 #define WARNING_NO_SYNC				1		// Нет внешнего импульса синхронизации
-#define WARNING_SYNC_TIMEOUT		2		// Длительность синхронизации больше допустимого
-#define WARNING_BAD_CONFIG			3		// Заданая конфигурация за пределами допустимого
+#define WARNING_BAD_CONFIG			2		// Заданая конфигурация за пределами допустимого
 
 // DISABLE CODES
 //

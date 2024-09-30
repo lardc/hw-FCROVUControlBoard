@@ -259,7 +259,6 @@ void LOGIC_Update()
 	}
 	if(CONTROL_SubState == SDS_FallEdge && (CONTROL_TimeCounter >= FallEdgeTime))
 	{
-		LL_PulseEnable(false);
 		LOGIC_ResetHWToDefaults(false);
 		CONTROL_SetDeviceState(DS_InProcess, SDS_PostPulseCharg);
 	}
