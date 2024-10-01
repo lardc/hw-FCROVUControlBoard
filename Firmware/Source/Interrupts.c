@@ -97,7 +97,8 @@ void INT_NOExtSyncControl()
 	{
 		LOGIC_ResetHWToDefaults(FALSE);
 		DataTable[REG_WARNING] = WARNING_NO_SYNC;
-		CONTROL_SetDeviceState(DS_Ready, SDS_None);
+		LOGIC_BatteryCharge(true);
+		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
 		SyncStartTimeout = 0;
 	}
 }

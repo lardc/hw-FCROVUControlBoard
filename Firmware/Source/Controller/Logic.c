@@ -207,7 +207,7 @@ void LOGIC_HandlePanelLamp(bool Pulse)
 
 void LOGIC_HandleBatteryCharge()
 {
-	if(CONTROL_State != DS_InProcess || CONTROL_State != DS_ConfigReady)
+	if(CONTROL_State != DS_ConfigReady)
 	{
 		// Мониторинг уровня заряда батареи
 		float BatteryVoltage = MEASURE_GetBatteryVoltage();
