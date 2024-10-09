@@ -11,8 +11,8 @@ typedef enum __DeviceState
 	DS_Fault,
 	DS_Disabled,
 	DS_Ready,
-	DS_ConfigReady,
 	DS_InProcess,
+	DS_ConfigReady,
 	DS_BatteryCharging
 } DeviceState;
 
