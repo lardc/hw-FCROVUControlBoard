@@ -51,6 +51,10 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_LED1);
 	GPIO_InitPushPullOutput(GPIO_PULSE_EN2);
 	
+	// Выставление уровня выхода
+
+	GPIO_SetState(GPIO_START_PULSE,true);
+
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);

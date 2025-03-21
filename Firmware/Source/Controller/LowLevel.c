@@ -25,14 +25,14 @@ void LL_PanelLamp(bool State)
 
 void LL_PulseEnable(bool State)
 {
-	GPIO_SetState(GPIO_PULSE_EN, !State);
+	GPIO_SetState(GPIO_PULSE_EN, State);
 	GPIO_SetState(GPIO_PULSE_EN2, State);
 }
 //-----------------------------
 
 void LL_PulseStart(bool State)
 {
-	GPIO_SetState(GPIO_START_PULSE, State);
+	GPIO_SetState(GPIO_START_PULSE, !State);
 }
 //-----------------------------
 
