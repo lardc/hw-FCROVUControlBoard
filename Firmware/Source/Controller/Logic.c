@@ -21,7 +21,6 @@
 // Varibales
 //
 volatile Int64U SwitchTime = 0, SyncStartTimeout = 0, AfterPulseTimeout = 0, FallEdgeTime = 0;
-static Int64U TimePulse;
 Int16U CurrentRange = 0;
 
 // Functions
@@ -66,6 +65,7 @@ Int16U LOGIC_SetCurrentRange(Int16U Current)
 }
 
 // ”правление реле выбора тока
+
 void LOGIC_SetOutCurrent(Int16U CurrentRange)
 {
 	switch (CurrentRange)
@@ -111,14 +111,6 @@ void LOGIC_SetOutCurrent(Int16U CurrentRange)
 		break;
 		}
 }
-void LOGIC_TimePulse(Int16U VRate)
-{
-	TimePulse = DataTable[REG_BAT_VOLTAGE] / VRate + DOP_TIME_US;
-	if (TimePulse > WIDTH_SYNC_LINE_MAX)
-		TimePulse = WIDTH_SYNC_LINE_MAX;
-	return;
-}
-
 //-----------------------------
 
 void LOGIC_BeginTest()
@@ -141,7 +133,7 @@ void LOGIC_ApplyParameters(Int64U CONTROL_TimeCounter)
 void LOGIC_TestSequence()
 {
 	LL_PulseStart(true);
-	DELAY_US(TimePulse);
+	DELAY_US(WIDTH_SYNC_TIME);
 	LL_PulseStart(false);
 	CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
 }

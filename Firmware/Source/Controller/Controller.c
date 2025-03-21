@@ -218,7 +218,6 @@ void CONTROL_ApplyParameters()
 	{
 		LL_SetGateVoltage(GateV);
 		LOGIC_SetOutCurrent(LOGIC_SetCurrentRange(Current));
-		LOGIC_TimePulse(VoltageRate);
 
 		CONTROL_SetDeviceState(DS_InProcess, SDS_ConfigReady);
 	}
