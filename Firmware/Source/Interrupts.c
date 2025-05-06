@@ -5,25 +5,26 @@
 #include "Board.h"
 #include "Global.h"
 #include "SysConfig.h"
+#include "Logic.h"
+#include "DeviceObjectDictionary.h"
+#include "DataTable.h"
+
+// Functions prototypes
+//
+void INT_NOExtSyncControl();
+void INT_SyncWidthControl();
 
 // Functions
 //
-void EXTI0_IRQHandler()
+void EXTI9_5_IRQHandler()
 {
-	if(!GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_WaitSync)
+	if(CONTROL_SubState == SDS_WaitSync && !GPIO_GetState(GPIO_SYNC_IN))
 	{
-		LL_PanelLamp(true);
+		LOGIC_HandlePanelLamp(true);
+		CONTROL_SetDeviceState(DS_InProcess, SDS_RiseEdgeDetected);
 		TIM_Start(TIM7);
-
-		CONTROL_SetDeviceState(DS_Powered, SDS_RiseEdgeDetected);
 	}
-	else
-	{
-		if(GPIO_GetState(GPIO_SYNC_IN) && CONTROL_SubState == SDS_RiseEdgeDetected)
-			AfterPulseTimeout = CONTROL_TimeCounter + AFTER_PULSE_TIMEOUT;
-	}
-
-	EXTI_FlagReset(EXTI_0);
+	EXTI_FlagReset(EXTI_5);
 }
 //-----------------------------------------
 
@@ -64,8 +65,15 @@ void TIM3_IRQHandler()
 				CounterLed = 0;
 			}
 		}
-		
-		CONTROL_AfterPulseProcess();
+		LOGIC_HandleBatteryCharge();
+		LOGIC_HandleFan(false);
+		LOGIC_HandlePanelLamp(false);
+		INT_NOExtSyncControl();
+
+		if(CONTROL_State == DS_InProcess)
+		{
+			LOGIC_Update();
+		}
 		TIM_StatusClear(TIM3);
 	}
 }
@@ -75,8 +83,30 @@ void TIM7_IRQHandler()
 {
 	if(TIM_StatusCheck(TIM7))
 	{
+		INT_SyncWidthControl();
 		TIM_Stop(TIM7);
+		TIM_Reset(TIM7);
 		TIM_StatusClear(TIM7);
 	}
+}
+//-----------------------------------------
+
+void INT_NOExtSyncControl()
+{
+	if(SyncStartTimeout && (CONTROL_TimeCounter >= SyncStartTimeout))
+	{
+		LOGIC_ResetHWToDefaults(FALSE);
+		DataTable[REG_WARNING] = WARNING_NO_SYNC;
+		LOGIC_BatteryCharge(true);
+		CONTROL_SetDeviceState(DS_BatteryCharging, SDS_PostPulseCharg);
+		SyncStartTimeout = 0;
+	}
+}
+//-----------------------------------------
+
+void INT_SyncWidthControl()
+{
+	LOGIC_ResetHWToDefaults(FALSE);
+	CONTROL_SetDeviceState(DS_InProcess, SDS_FallEdge);
 }
 //-----------------------------------------

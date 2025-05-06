@@ -19,8 +19,10 @@ Boolean INITCFG_ConfigSystemClock()
 void INITCFG_ConfigEI()
 {
 	// Sync
-	EXTI_Config(EXTI_PB, EXTI_0, BOTH_TRIG, 0);
-	EXTI_EnableInterrupt(EXTI0_IRQn, 0, true);
+	EXTI_Config(EXTI_PA, EXTI_5, BOTH_TRIG, 0);
+	NVIC_SetPriority(EXTI9_5_IRQn, 0);
+	EXTI_EnableInterrupt(EXTI9_5_IRQn, 0, true);
+
 }
 //------------------------------------------------------------------------------
 
@@ -47,8 +49,12 @@ void INITCFG_ConfigIO()
 	GPIO_InitPushPullOutput(GPIO_PS_BOARD);
 	GPIO_InitPushPullOutput(GPIO_SW_BOARD);
 	GPIO_InitPushPullOutput(GPIO_LED1);
-	GPIO_InitPushPullOutput(GPIO_LED2);
+	GPIO_InitPushPullOutput(GPIO_PULSE_EN2);
 	
+	// Выставление уровня выхода
+
+	GPIO_SetState(GPIO_START_PULSE,true);
+
 	// Альтернативные функции
 	GPIO_InitAltFunction(GPIO_ALT_UART1_RX, AltFn_7);
 	GPIO_InitAltFunction(GPIO_ALT_UART1_TX, AltFn_7);
@@ -67,6 +73,8 @@ void INITCFG_ConfigUART()
 void INITCFG_ConfigCAN()
 {
 	RCC_CAN_Clk_EN(CAN_1_ClkEN);
+	NVIC_SetPriority(USB_HP_CAN1_TX_IRQn, 2);
+	NVIC_SetPriority(USB_LP_CAN1_RX0_IRQn, 2);
 	NCAN_Init(SYSCLK, CAN_BAUDRATE, FALSE);
 	NCAN_FIFOInterrupt(TRUE);
 	NCAN_FilterInit(0, 0, 0);
@@ -86,6 +94,7 @@ void INITCFG_ConfigADC()
 	
 	ADC_ChannelSeqLen(ADC1, ADC_DMA_BUFF_SIZE);
 	ADC_DMAConfig(ADC1);
+	NVIC_SetPriority(ADC1_2_IRQn, 2);
 	ADC_Enable(ADC1);
 }
 //------------------------------------------------------------------------------
@@ -100,6 +109,7 @@ void INITCFG_ConfigDMA()
 			DMA_MINC_EN, DMA_PINC_DIS, DMA_CIRCMODE_EN, DMA_READ_FROM_PERIPH);
 	DMAChannelX_DataConfig(DMA_ADC_V_BAT_CHANNEL, (uint32_t)(&MEASURE_ADC_BatteryVoltageRaw[0]), (uint32_t)(&ADC1->DR),
 			ADC_DMA_BUFF_SIZE);
+	NVIC_SetPriority(DMA1_Channel1_IRQn, 2);
 	DMA_ChannelEnable(DMA_ADC_V_BAT_CHANNEL, true);
 }
 //------------------------------------------------------------------------------
@@ -109,6 +119,7 @@ void INITCFG_ConfigTimer3()
 	TIM_Clock_En(TIM_3);
 	TIM_Config(TIM3, SYSCLK, TIMER3_uS);
 	TIM_Interupt(TIM3, 3, true);
+	NVIC_SetPriority(TIM3_IRQn, 3);
 	TIM_Start(TIM3);
 }
 //------------------------------------------------------------------------------
@@ -118,6 +129,7 @@ void INITCFG_ConfigTimer6()
 	TIM_Clock_En(TIM_6);
 	TIM_Config(TIM6, SYSCLK, TIMER6_uS);
 	TIM_MasterMode(TIM6, MMS_UPDATE);
+	NVIC_SetPriority(TIM6_DAC_IRQn, 2);
 	TIM_Start(TIM6);
 }
 //------------------------------------------------------------------------------
@@ -126,7 +138,9 @@ void INITCFG_ConfigTimer7()
 {
 	TIM_Clock_En(TIM_7);
 	TIM_Config(TIM7, SYSCLK, TIMER7_uS);
+	NVIC_SetPriority(TIM7_IRQn, 0);
 	TIM_Interupt(TIM7, 1, true);
+	TIM_Reset(TIM7);
 }
 //------------------------------------------------------------------------------
 
